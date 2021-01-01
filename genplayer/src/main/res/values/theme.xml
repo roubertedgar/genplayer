@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Player.Theme" parent="AppTheme.DayNight">
+        <item name="imageButtonStyle">@style/Style.ImageButton</item>
+    </style>
+
+    <style name="Player.Theme.Menu" parent="Player.Theme">
+        <item name="imageButtonStyle">@style/Style.ImageButton.Menu</item>
+    </style>
+</resources>

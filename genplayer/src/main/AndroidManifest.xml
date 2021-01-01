@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.downstairs.genplayer">
+
+    <application>
+        <service android:name="com.downstairs.genplayer.service.PlayerService" />
+
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.downstairs.genplayer.CastOptionsProvider" />
+
+
+        <receiver android:name="com.downstairs.genplayer.notification.NotificationActionReceiver" />
+    </application>
+
+</manifest>

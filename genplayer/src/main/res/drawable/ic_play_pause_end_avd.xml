@@ -1,0 +1,53 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="70dp"
+            android:height="70dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:name="circle"
+                android:pathData="M 22.966 11.956 C 22.966 18.037 18.036 22.966 11.954 22.966 C 5.874 22.966 0.944 18.037 0.944 11.956 C 0.944 5.873 5.874 0.944 11.954 0.944 C 18.036 0.944 22.966 5.873 22.966 11.956 Z"
+                android:strokeWidth="0.5"
+                android:strokeColor="@color/color_on_primary" />
+            <path
+                android:name="right_pipe"
+                android:pathData="M 7.749 7.006 L 7.749 16.994"
+                android:strokeWidth="0.5"
+                android:strokeColor="@color/color_on_primary" />
+            <path
+                android:name="left_pipe"
+                android:pathData="M 7.749 7.006 L 7.749 16.994"
+                android:strokeWidth="0.5"
+                android:strokeColor="@color/color_on_primary" />
+            <path
+                android:name="play_button"
+                android:fillColor="@color/color_on_primary"
+                android:pathData="M 7.975 7.006 L 7.975 16.994 L 18.088 12.006 Z" />
+        </vector>
+    </aapt:attr>
+    <target android:name="play_button">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="pathData"
+                android:valueFrom="M 7.975 7.006 L 7.975 16.994 L 18.088 12.006 Z"
+                android:valueTo="M 16.478 7.006 L 16.478 16.994 L 16.478 12.006 Z"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+    <target android:name="right_pipe">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="pathData"
+                android:valueFrom="M 7.749 7.006 L 7.749 16.994"
+                android:valueTo="M 16.25 7.008 L 16.25 16.994"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+</animated-vector>

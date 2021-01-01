@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Style.ImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/rounded_player_button_background</item>
+        <item name="android:height">@dimen/player_button_size</item>
+
+    </style>
+
+    <style name="Style.ImageButton.Menu" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/rounded_menu_item_background</item>
+    </style>
+</resources>

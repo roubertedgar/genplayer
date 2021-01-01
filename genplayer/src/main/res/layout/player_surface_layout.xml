@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include layout="@layout/exo_player_view" />
+
+    <com.downstairs.genplayer.view.PlayerControllerView
+        android:id="@id/exo_controller"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:controller_layout_id="@layout/player_controller_view" />
+
+</merge>

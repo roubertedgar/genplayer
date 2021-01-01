@@ -1,2 +1,3 @@
+include ':genplayer'
 include ':app'
 rootProject.name = "genplayer"

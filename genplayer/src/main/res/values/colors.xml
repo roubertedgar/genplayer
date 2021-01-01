@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="playerControllerBackground">@color/black_a25</color>
+</resources>
