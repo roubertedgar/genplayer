@@ -44,6 +44,8 @@ dependencies {
     kapt(Dependencies.daggerCompiler)
     kapt(Dependencies.daggerProcessor)
 
+    project(":genplayer")
+
     implementation(Dependencies.ExoPlayer.cast)
 
     testImplementation(Dependencies.Test.jUnit)
