@@ -5,14 +5,13 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import com.downstairs.core.extensions.getCoreComponent
 import com.downstairs.genplayer.SplitPlayer
 import com.downstairs.genplayer.notification.NotificationListener
 import com.downstairs.genplayer.PlaybackSessionManager
 import com.downstairs.genplayer.content.MediaAction
 import com.downstairs.genplayer.content.MediaState
 import com.downstairs.genplayer.engine.EngineObserver
-import com.downstairs.dsplayer.injection.DaggerPlayerComponent
+import com.downstairs.genplayer.injection.DaggerPlayerComponent
 import javax.inject.Inject
 
 class PlayerService : Service() {
@@ -24,7 +23,7 @@ class PlayerService : Service() {
     lateinit var splitPlayer: SplitPlayer
 
     override fun onCreate() {
-        DaggerPlayerComponent.factory().create(getCoreComponent()).inject(this)
+        DaggerPlayerComponent.factory().create(baseContext).inject(this)
 
         sessionManager.setMediaActionListener { onMediaAction(it) }
 

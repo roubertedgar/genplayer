@@ -46,7 +46,7 @@
             app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
             app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
 
-        <com.downstairs.core.components.AnimatedVectorButton
+        <com.downstairs.genplayer.view.AnimatedVectorButton
             android:id="@+id/playPauseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 package com.downstairs.genplayer.notification
 
-import com.downstairs.dsplayer.R
+import com.downstairs.genplayer.R
 
 const val PLAYER_CONTROL_ACTION_PLAY = "com.downstairs.player.action.PLAY"
 const val PLAYER_CONTROL_ACTION_PAUSE = "com.downstairs.player.action.PAUSE"

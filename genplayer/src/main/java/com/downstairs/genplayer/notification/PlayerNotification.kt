@@ -7,8 +7,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationManagerCompat
-import com.downstairs.core.notification.NotificationChannelManager.Companion.PLAYER_CHANNEL_ID
-import com.downstairs.dsplayer.R
+import com.downstairs.genplayer.R
 import com.downstairs.genplayer.PlayerMediaSession
 import com.downstairs.genplayer.content.MediaState
 import javax.inject.Inject
@@ -21,6 +20,7 @@ class PlayerNotification @Inject constructor(
     companion object {
         const val PLAYER_NOTIFICATION_ID = 455623
         const val PLAYER_CONTROL_REQUEST_CODE = 23334
+        const val PLAYER_CHANNEL_ID = "playerNotificationChannelId"
     }
 
     private val notificationManger = NotificationManagerCompat.from(context)

@@ -1,17 +1,18 @@
 package com.downstairs.genplayer.injection
 
-import com.downstairs.core.injection.CoreComponent
-import com.downstairs.core.injection.FeatureScope
+import android.content.Context
 import com.downstairs.genplayer.service.PlayerService
+import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
-@FeatureScope
-@Component(modules = [PlayerModule::class], dependencies = [CoreComponent::class])
+@Singleton
+@Component(modules = [PlayerModule::class])
 interface PlayerComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(coreComponent: CoreComponent): PlayerComponent
+        fun create(@BindsInstance context: Context): PlayerComponent
     }
 
     fun inject(service: PlayerService)

@@ -3,7 +3,6 @@ package com.downstairs.genplayer.view
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
-import com.downstairs.core.components.AnimatedVectorButton
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PAUSE
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PLAY
 import com.google.android.exoplayer2.Player

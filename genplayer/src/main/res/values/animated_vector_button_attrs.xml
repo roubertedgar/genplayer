@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AnimatedVectorButton">
+        <attr name="end_animated_drawable" format="reference" />
+        <attr name="start_animated_drawable" format="reference" />
+    </declare-styleable>
+</resources>

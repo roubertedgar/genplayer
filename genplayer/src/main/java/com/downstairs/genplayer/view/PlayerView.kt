@@ -7,7 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.downstairs.dsplayer.R
+import com.downstairs.genplayer.R
 import com.downstairs.genplayer.SplitPlayer
 import com.downstairs.genplayer.content.Content
 import com.downstairs.genplayer.engine.EngineObserver
