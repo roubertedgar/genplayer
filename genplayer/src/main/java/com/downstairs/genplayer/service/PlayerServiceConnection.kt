@@ -15,6 +15,8 @@ class PlayerServiceConnection(private val context: Context) : ServiceConnection 
     private var player: SplitPlayer? = null
 
     fun connect(onConnect: (SplitPlayer) -> Unit) {
+        this.onConnect = onConnect
+
         if (isConnected) player?.also(onConnect) else bindService()
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/playerControllerBackground"
+    android:background="@color/black_a25"
     android:theme="@style/Player.Theme"
     tools:ignore="ContentDescription">
 
@@ -38,7 +38,7 @@
         </LinearLayout>
 
         <ProgressBar
-            android:id="@+id/playerBufferingProgress"
+            android:id="@+id/bufferingSpinProgress"
             android:layout_width="80dp"
             android:layout_height="80dp"
             app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"

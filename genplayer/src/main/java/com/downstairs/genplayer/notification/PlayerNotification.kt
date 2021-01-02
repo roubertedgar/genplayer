@@ -1,14 +1,16 @@
 package com.downstairs.genplayer.notification
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationManagerCompat
-import com.downstairs.genplayer.R
 import com.downstairs.genplayer.PlayerMediaSession
+import com.downstairs.genplayer.R
 import com.downstairs.genplayer.content.MediaState
 import javax.inject.Inject
 
@@ -26,6 +28,10 @@ class PlayerNotification @Inject constructor(
     private val notificationManger = NotificationManagerCompat.from(context)
     private lateinit var notificationBuilder: NotificationCompat.Builder
     private lateinit var notificationListener: NotificationListener
+
+    init {
+        createPlayerChannel()
+    }
 
     fun setNotificationListener(notificationListener: NotificationListener) {
         this.notificationListener = notificationListener
@@ -85,4 +91,13 @@ class PlayerNotification @Inject constructor(
         notificationListener.onNotificationRemoved()
     }
 
+    private fun createPlayerChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                PLAYER_CHANNEL_ID, "Player", NotificationManager.IMPORTANCE_NONE
+            )
+
+            notificationManger.createNotificationChannel(channel)
+        }
+    }
 }

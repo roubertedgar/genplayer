@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Player.Theme" parent="AppTheme.DayNight">
+    <style name="Player.Theme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="imageButtonStyle">@style/Style.ImageButton</item>
     </style>
 

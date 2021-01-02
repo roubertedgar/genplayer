@@ -44,7 +44,7 @@ dependencies {
     kapt(Dependencies.daggerCompiler)
     kapt(Dependencies.daggerProcessor)
 
-    project(":genplayer")
+    implementation(project(":genplayer"))
 
     implementation(Dependencies.ExoPlayer.cast)
 

@@ -3,6 +3,7 @@ package com.downstairs.genplayer.view
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
+import androidx.core.view.isVisible
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PAUSE
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PLAY
 import com.google.android.exoplayer2.Player
@@ -30,6 +31,10 @@ class PlayerControllerView @JvmOverloads constructor(
             player.addListener(object : Player.EventListener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     changePlayPauseButtonState(isPlaying)
+                }
+
+                override fun onPlaybackStateChanged(state: Int) {
+                    bufferingSpinProgress.isVisible = state == Player.STATE_BUFFERING
                 }
             })
         }

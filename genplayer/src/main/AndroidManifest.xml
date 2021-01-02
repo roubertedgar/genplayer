@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.downstairs.genplayer">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
         <service android:name="com.downstairs.genplayer.service.PlayerService" />
 
