@@ -9,9 +9,10 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationManagerCompat
+import com.downstairs.genplayer.MediaData
 import com.downstairs.genplayer.PlayerMediaSession
 import com.downstairs.genplayer.R
-import com.downstairs.genplayer.content.MediaState
+import com.downstairs.genplayer.content.MediaStatus
 import javax.inject.Inject
 
 class PlayerNotification @Inject constructor(
@@ -30,6 +31,10 @@ class PlayerNotification @Inject constructor(
     private lateinit var notificationListener: NotificationListener
 
     init {
+        mediaSession.setOnMetadataChangeListener { media, playing ->
+            postNotification(media, createActions(playing))
+        }
+
         createPlayerChannel()
     }
 
@@ -37,16 +42,16 @@ class PlayerNotification @Inject constructor(
         this.notificationListener = notificationListener
     }
 
-    fun prepare(mediaState: MediaState) {
+    private fun postNotification(mediaData: MediaData, actions: List<Action>) {
         notificationBuilder = NotificationCompat.Builder(context, PLAYER_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_play_notification)
-            .setLargeIcon(mediaState.artwork)
-            .setContentTitle(mediaState.title)
-            .setContentText(mediaState.description)
+            .setContentTitle(mediaData.title)
+            .setContentText(mediaData.description)
+            .setLargeIcon(mediaData.artwork)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setStyle(createMediaStyle())
+            .setActions(actions)
 
-        addNotificationActions(mediaState)
         postNotification(notificationBuilder.build())
     }
 
@@ -56,17 +61,19 @@ class PlayerNotification @Inject constructor(
             .setMediaSession(mediaSession.sessionToken)
     }
 
-    private fun addNotificationActions(mediaState: MediaState) {
-        val playPauseAction = if (mediaState.isPlaying) {
+    private fun createActions(playing: Boolean): List<Action> {
+        val playPauseAction = if (playing) {
             getAction(MediaNotificationAction.PAUSE)
         } else {
             getAction(MediaNotificationAction.PLAY)
         }
 
-        notificationBuilder.addAction(getAction(MediaNotificationAction.BACKWARD))
-        notificationBuilder.addAction(playPauseAction)
-        notificationBuilder.addAction(getAction(MediaNotificationAction.FORWARD))
-        notificationBuilder.addAction(getAction(MediaNotificationAction.STOP))
+        return listOf(
+            getAction(MediaNotificationAction.BACKWARD),
+            playPauseAction,
+            getAction(MediaNotificationAction.FORWARD),
+            getAction(MediaNotificationAction.STOP)
+        )
     }
 
     private fun getAction(action: MediaNotificationAction): Action {
@@ -100,4 +107,10 @@ class PlayerNotification @Inject constructor(
             notificationManger.createNotificationChannel(channel)
         }
     }
+}
+
+
+ fun NotificationCompat.Builder.setActions(actions: List<Action>): NotificationCompat.Builder {
+    actions.forEach { addAction(it) }
+    return this
 }

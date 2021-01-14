@@ -47,20 +47,20 @@ abstract class PlayerEngine {
         player.stop()
     }
 
-    private fun currentMediaState(): MediaState {
+    private fun currentMediaState(): MediaStatus {
         val currentItem = getCurrentItem()
         val title = currentItem?.getProperty(MediaProperty.TITLE) ?: ""
         val description = currentItem?.getProperty(MediaProperty.DESCRIPTION) ?: ""
         val artworkUrl = currentItem?.getProperty(MediaProperty.ARTWORK_URL) ?: ""
 
-        return MediaState(
+        return MediaStatus(
             title,
             description,
             player.duration,
+            artworkUrl,
             player.currentPosition,
             player.playbackParameters.speed,
-            player.isPlaying,
-            artworkUrl
+            player.isPlaying
         )
     }
 

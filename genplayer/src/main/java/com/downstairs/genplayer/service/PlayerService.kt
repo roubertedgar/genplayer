@@ -9,7 +9,7 @@ import com.downstairs.genplayer.SplitPlayer
 import com.downstairs.genplayer.notification.NotificationListener
 import com.downstairs.genplayer.PlaybackSessionManager
 import com.downstairs.genplayer.content.MediaAction
-import com.downstairs.genplayer.content.MediaState
+import com.downstairs.genplayer.content.MediaStatus
 import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.injection.DaggerPlayerComponent
 import javax.inject.Inject
@@ -39,8 +39,8 @@ class PlayerService : Service() {
 
         splitPlayer.addEngineListener(object : EngineObserver {
 
-            override fun onStateChanged(mediaState: MediaState) {
-                sessionManager.post(mediaState)
+            override fun onStateChanged(mediaStatus: MediaStatus) {
+                sessionManager.post(mediaStatus)
             }
         })
     }

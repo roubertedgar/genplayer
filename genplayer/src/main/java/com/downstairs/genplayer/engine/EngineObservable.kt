@@ -1,6 +1,6 @@
 package com.downstairs.genplayer.engine
 
-import com.downstairs.genplayer.content.MediaState
+import com.downstairs.genplayer.content.MediaStatus
 
 class EngineObservable {
 
@@ -20,9 +20,9 @@ class EngineObservable {
         }
     }
 
-    fun onStateChanged(state: MediaState?) {
+    fun onStateChanged(status: MediaStatus?) {
         for (observer in observers) {
-            observer.onStateChanged(state!!)
+            observer.onStateChanged(status!!)
         }
     }
 }
