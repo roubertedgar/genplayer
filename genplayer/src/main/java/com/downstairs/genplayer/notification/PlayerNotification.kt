@@ -9,10 +9,9 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationManagerCompat
-import com.downstairs.genplayer.MediaData
-import com.downstairs.genplayer.PlayerMediaSession
+import com.downstairs.genplayer.session.MediaSessionData
+import com.downstairs.genplayer.session.PlayerMediaSession
 import com.downstairs.genplayer.R
-import com.downstairs.genplayer.content.MediaStatus
 import javax.inject.Inject
 
 class PlayerNotification @Inject constructor(
@@ -23,6 +22,7 @@ class PlayerNotification @Inject constructor(
     companion object {
         const val PLAYER_NOTIFICATION_ID = 455623
         const val PLAYER_CONTROL_REQUEST_CODE = 23334
+        const val PLAYER_CHANNEL_NAME = "Player"
         const val PLAYER_CHANNEL_ID = "playerNotificationChannelId"
     }
 
@@ -31,8 +31,8 @@ class PlayerNotification @Inject constructor(
     private lateinit var notificationListener: NotificationListener
 
     init {
-        mediaSession.setOnMetadataChangeListener { media, playing ->
-            postNotification(media, createActions(playing))
+        mediaSession.setMediaSessionDataListener { media ->
+            postNotification(media)
         }
 
         createPlayerChannel()
@@ -42,7 +42,7 @@ class PlayerNotification @Inject constructor(
         this.notificationListener = notificationListener
     }
 
-    private fun postNotification(mediaData: MediaData, actions: List<Action>) {
+    private fun postNotification(mediaData: MediaSessionData) {
         notificationBuilder = NotificationCompat.Builder(context, PLAYER_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_play_notification)
             .setContentTitle(mediaData.title)
@@ -50,19 +50,13 @@ class PlayerNotification @Inject constructor(
             .setLargeIcon(mediaData.artwork)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setStyle(createMediaStyle())
-            .setActions(actions)
+            .setActions(createActionList(mediaData))
 
         postNotification(notificationBuilder.build())
     }
 
-    private fun createMediaStyle(): androidx.media.app.NotificationCompat.MediaStyle {
-        return androidx.media.app.NotificationCompat.MediaStyle()
-            .setShowActionsInCompactView(1)
-            .setMediaSession(mediaSession.sessionToken)
-    }
-
-    private fun createActions(playing: Boolean): List<Action> {
-        val playPauseAction = if (playing) {
+    private fun createActionList(mediaData: MediaSessionData): List<Action> {
+        val playPauseAction = if (mediaData.isPlaying) {
             getAction(MediaNotificationAction.PAUSE)
         } else {
             getAction(MediaNotificationAction.PLAY)
@@ -74,6 +68,12 @@ class PlayerNotification @Inject constructor(
             getAction(MediaNotificationAction.FORWARD),
             getAction(MediaNotificationAction.STOP)
         )
+    }
+
+    private fun createMediaStyle(): androidx.media.app.NotificationCompat.MediaStyle {
+        return androidx.media.app.NotificationCompat.MediaStyle()
+            .setShowActionsInCompactView(1)
+            .setMediaSession(mediaSession.sessionToken)
     }
 
     private fun getAction(action: MediaNotificationAction): Action {
@@ -101,16 +101,15 @@ class PlayerNotification @Inject constructor(
     private fun createPlayerChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                PLAYER_CHANNEL_ID, "Player", NotificationManager.IMPORTANCE_NONE
+                PLAYER_CHANNEL_ID, PLAYER_CHANNEL_NAME, NotificationManager.IMPORTANCE_NONE
             )
 
             notificationManger.createNotificationChannel(channel)
         }
     }
-}
 
-
- fun NotificationCompat.Builder.setActions(actions: List<Action>): NotificationCompat.Builder {
-    actions.forEach { addAction(it) }
-    return this
+    private fun NotificationCompat.Builder.setActions(actions: List<Action>): NotificationCompat.Builder {
+        actions.forEach { addAction(it) }
+        return this
+    }
 }

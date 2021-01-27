@@ -1,7 +1,8 @@
 package com.downstairs.genplayer.injection
 
 import android.content.Context
-import com.downstairs.genplayer.PlayerMediaSession
+import android.support.v4.media.session.MediaSessionCompat
+import com.downstairs.genplayer.session.PlayerMediaSession
 import com.downstairs.genplayer.content.CustomHeaderMediaSourceFactory
 import com.downstairs.genplayer.tools.ArtworkLoader
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -12,10 +13,14 @@ import javax.inject.Singleton
 @Module
 class PlayerModule {
 
+    companion object {
+        const val MEDIA_SESSION_TAG = "MediaSessionPlayerTag"
+    }
+
     @Singleton
     @Provides
-    fun providesMediaSession(context: Context, loader:ArtworkLoader): PlayerMediaSession {
-        return PlayerMediaSession(context, loader)
+    fun providesMediaSession(context: Context, loader: ArtworkLoader): PlayerMediaSession {
+        return PlayerMediaSession(context, MediaSessionCompat(context, MEDIA_SESSION_TAG), loader)
     }
 
     @Singleton

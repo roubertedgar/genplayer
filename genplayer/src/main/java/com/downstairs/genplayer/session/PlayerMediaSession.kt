@@ -1,8 +1,7 @@
-package com.downstairs.genplayer
+package com.downstairs.genplayer.session
 
 import android.content.Context
 import android.content.IntentFilter
-import android.graphics.Bitmap
 import android.media.MediaMetadata
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -16,32 +15,28 @@ import javax.inject.Inject
 
 class PlayerMediaSession @Inject constructor(
     private val context: Context,
+    private val mediaSessionCompat: MediaSessionCompat,
     private val artLoader: ArtworkLoader
 ) {
 
-    companion object {
-        const val MEDIA_SESSION_TAG = "MediaSessionPlayerTag"
-    }
-
     private val actionReceiver = NotificationActionReceiver()
-    private val mediaSessionCompat = MediaSessionCompat(context, MEDIA_SESSION_TAG)
     private var actionListener: (MediaAction) -> Unit = {}
-    private var onMetadataChanged: (data: MediaData, playing: Boolean) -> Unit = { _, _ -> }
+    private var onDataChanged: (MediaSessionData) -> Unit = { }
 
     val sessionToken: MediaSessionCompat.Token = mediaSessionCompat.sessionToken
+
+    init {
+        setMediaSessionCallback()
+        registerMediaActionReceiver()
+    }
 
     fun setMediaActionListener(actionListener: (MediaAction) -> Unit) {
         this.actionListener = actionListener
         actionReceiver.setMediaActionListener(actionListener)
     }
 
-    fun setOnMetadataChangeListener(onChange: (data: MediaData, playing: Boolean) -> Unit) {
-        onMetadataChanged = onChange
-    }
-
-    init {
-        setMediaSessionCallback()
-        registerMediaActionReceiver()
+    fun setMediaSessionDataListener(onChange: (MediaSessionData) -> Unit) {
+        onDataChanged = onChange
     }
 
     private fun setMediaSessionCallback() {
@@ -72,16 +67,13 @@ class PlayerMediaSession @Inject constructor(
                 .putLong(MediaMetadata.METADATA_KEY_DURATION, mediaStatus.durationMs)
                 .build()
 
-            notifyMediaChanged(mediaStatus, artwork)
-            mediaSessionCompat.setMetadata(metadata)
-        }
-    }
+            val mediaSessionData = MediaSessionData(
+                mediaStatus.title, mediaStatus.description, artwork, mediaStatus.isPlaying
+            )
 
-    private fun notifyMediaChanged(mediaStatus: MediaStatus, artwork: Bitmap) {
-        onMetadataChanged(
-            MediaData(mediaStatus.title, mediaStatus.description, artwork),
-            mediaStatus.isPlaying
-        )
+            mediaSessionCompat.setMetadata(metadata)
+            onDataChanged(mediaSessionData)
+        }
     }
 
     private fun setPlaybackState(mediaStatus: MediaStatus) {
@@ -104,8 +96,3 @@ class PlayerMediaSession @Inject constructor(
     }
 }
 
-data class MediaData(
-    val title: String,
-    val description: String,
-    val artwork: Bitmap
-)

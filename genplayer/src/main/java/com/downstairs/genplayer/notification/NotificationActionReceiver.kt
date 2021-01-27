@@ -14,7 +14,6 @@ class NotificationActionReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(contxt: Context, intent: Intent) {
-
         when (intent.action) {
             PLAYER_CONTROL_ACTION_PLAY -> actionListener(MediaAction.Play)
             PLAYER_CONTROL_ACTION_PAUSE -> actionListener(MediaAction.Pause)

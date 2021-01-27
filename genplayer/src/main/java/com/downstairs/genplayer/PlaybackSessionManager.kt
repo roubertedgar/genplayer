@@ -4,6 +4,7 @@ import com.downstairs.genplayer.content.MediaAction
 import com.downstairs.genplayer.content.MediaStatus
 import com.downstairs.genplayer.notification.NotificationListener
 import com.downstairs.genplayer.notification.PlayerNotification
+import com.downstairs.genplayer.session.PlayerMediaSession
 import javax.inject.Inject
 
 class PlaybackSessionManager @Inject constructor(
