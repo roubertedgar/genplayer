@@ -31,7 +31,7 @@ abstract class PlayerEngine {
             is MediaAction.Play -> player.play()
             is MediaAction.Pause -> player.pause()
             is MediaAction.Forward -> forward()
-            is MediaAction.Backward -> backward()
+            is MediaAction.Rewind -> backward()
             is MediaAction.SeekTo -> player.seekTo(action.position)
             is MediaAction.Stop -> stopPlayer()
         }

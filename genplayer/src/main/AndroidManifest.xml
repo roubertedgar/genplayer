@@ -12,7 +12,7 @@
             android:value="com.downstairs.genplayer.CastOptionsProvider" />
 
 
-        <receiver android:name="com.downstairs.genplayer.notification.NotificationActionReceiver" />
+        <receiver android:name="com.downstairs.genplayer.notification.MediaActionReceiver" />
     </application>
 
 </manifest>

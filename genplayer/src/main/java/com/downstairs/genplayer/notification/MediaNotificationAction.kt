@@ -12,7 +12,7 @@ enum class MediaNotificationAction(val icon: Int, val title: String, val filter:
     PLAY(R.drawable.ic_play_notification, "Play", PLAYER_CONTROL_ACTION_PLAY),
     PAUSE(R.drawable.ic_pause_notification, "Pause", PLAYER_CONTROL_ACTION_PAUSE),
     FORWARD(R.drawable.ic_forward_notification, "Forward", PLAYER_CONTROL_ACTION_FORWARD),
-    BACKWARD(R.drawable.ic_backward_notification, "Backward", PLAYER_CONTROL_ACTION_BACKWARD),
+    REWIND(R.drawable.ic_backward_notification, "Rewind", PLAYER_CONTROL_ACTION_BACKWARD),
     STOP(R.drawable.ic_close_notification, "Close", PLAYER_CONTROL_ACTION_STOP);
 
     companion object {

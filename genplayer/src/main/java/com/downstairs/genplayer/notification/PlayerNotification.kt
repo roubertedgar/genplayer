@@ -6,18 +6,17 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationManagerCompat
-import com.downstairs.genplayer.session.MediaSessionData
-import com.downstairs.genplayer.session.PlayerMediaSession
 import com.downstairs.genplayer.R
+import com.downstairs.genplayer.session.MediaSessionStatus
+import com.downstairs.genplayer.session.SessionListener
 import javax.inject.Inject
 
-class PlayerNotification @Inject constructor(
-    private val context: Context,
-    private val mediaSession: PlayerMediaSession
-) {
+class PlayerNotification @Inject constructor(private val context: Context) {
 
     companion object {
         const val PLAYER_NOTIFICATION_ID = 455623
@@ -27,66 +26,35 @@ class PlayerNotification @Inject constructor(
     }
 
     private val notificationManger = NotificationManagerCompat.from(context)
-    private lateinit var notificationBuilder: NotificationCompat.Builder
     private lateinit var notificationListener: NotificationListener
+    private lateinit var notificationBuilder: NotificationCompat.Builder
 
     init {
-        mediaSession.setMediaSessionDataListener { media ->
-            postNotification(media)
-        }
-
         createPlayerChannel()
     }
 
-    fun setNotificationListener(notificationListener: NotificationListener) {
-        this.notificationListener = notificationListener
+    fun setNotificationListener(listener: NotificationListener) {
+        this.notificationListener = listener
     }
 
-    private fun postNotification(mediaData: MediaSessionData) {
+    fun postNotification(sessionStatus: MediaSessionStatus) {
         notificationBuilder = NotificationCompat.Builder(context, PLAYER_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_play_notification)
-            .setContentTitle(mediaData.title)
-            .setContentText(mediaData.description)
-            .setLargeIcon(mediaData.artwork)
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setStyle(createMediaStyle())
-            .setActions(createActionList(mediaData))
+            .setSmallIcon(R.drawable.ic_play_notification)
+            .setContentTitle(sessionStatus.title)
+            .setContentText(sessionStatus.content)
+            .setLargeIcon(sessionStatus.largeIcon)
+            .setStyle(createMediaStyle(sessionStatus.token))
+            .setActions(sessionStatus.actions)
 
         postNotification(notificationBuilder.build())
     }
 
-    private fun createActionList(mediaData: MediaSessionData): List<Action> {
-        val playPauseAction = if (mediaData.isPlaying) {
-            getAction(MediaNotificationAction.PAUSE)
-        } else {
-            getAction(MediaNotificationAction.PLAY)
-        }
-
-        return listOf(
-            getAction(MediaNotificationAction.BACKWARD),
-            playPauseAction,
-            getAction(MediaNotificationAction.FORWARD),
-            getAction(MediaNotificationAction.STOP)
-        )
-    }
-
-    private fun createMediaStyle(): androidx.media.app.NotificationCompat.MediaStyle {
+    private fun createMediaStyle(sessionToken: MediaSessionCompat.Token): androidx.media.app.NotificationCompat.MediaStyle {
         return androidx.media.app.NotificationCompat.MediaStyle()
             .setShowActionsInCompactView(1)
-            .setMediaSession(mediaSession.sessionToken)
+            .setMediaSession(sessionToken)
     }
-
-    private fun getAction(action: MediaNotificationAction): Action {
-        return Action.Builder(action.icon, action.title, createPendingIntent(action)).build()
-    }
-
-    private fun createPendingIntent(notificationAction: MediaNotificationAction) =
-        PendingIntent.getBroadcast(
-            context,
-            PLAYER_CONTROL_REQUEST_CODE,
-            Intent(notificationAction.filter),
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
 
     private fun postNotification(notification: Notification) {
         notificationManger.notify(PLAYER_NOTIFICATION_ID, notification)
@@ -108,8 +76,34 @@ class PlayerNotification @Inject constructor(
         }
     }
 
-    private fun NotificationCompat.Builder.setActions(actions: List<Action>): NotificationCompat.Builder {
-        actions.forEach { addAction(it) }
+    private fun NotificationCompat.Builder.setActions(sessionActions: List<Long>): NotificationCompat.Builder {
+        sessionActions.forEach {
+            toNotificationAction(it)?.also { action ->
+                addAction(action)
+            }
+        }
+
         return this
     }
+
+    private fun toNotificationAction(@PlaybackStateCompat.Actions action: Long) = when (action) {
+        PlaybackStateCompat.ACTION_PLAY -> getAction(MediaNotificationAction.PLAY)
+        PlaybackStateCompat.ACTION_PAUSE -> getAction(MediaNotificationAction.PAUSE)
+        PlaybackStateCompat.ACTION_REWIND -> getAction(MediaNotificationAction.REWIND)
+        PlaybackStateCompat.ACTION_FAST_FORWARD -> getAction(MediaNotificationAction.FORWARD)
+        PlaybackStateCompat.ACTION_STOP -> getAction(MediaNotificationAction.STOP)
+        else -> null
+    }
+
+
+    private fun getAction(action: MediaNotificationAction) =
+        Action.Builder(action.icon, action.title, createPendingIntent(action)).build()
+
+    private fun createPendingIntent(notificationAction: MediaNotificationAction) =
+        PendingIntent.getBroadcast(
+            context,
+            PLAYER_CONTROL_REQUEST_CODE,
+            Intent(notificationAction.filter),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 }

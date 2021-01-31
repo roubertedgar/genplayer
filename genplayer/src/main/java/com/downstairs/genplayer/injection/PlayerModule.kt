@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.media.session.MediaSessionCompat
 import com.downstairs.genplayer.session.PlayerMediaSession
 import com.downstairs.genplayer.content.CustomHeaderMediaSourceFactory
+import com.downstairs.genplayer.notification.PlayerNotification
 import com.downstairs.genplayer.tools.ArtworkLoader
 import com.google.android.exoplayer2.SimpleExoPlayer
 import dagger.Module
@@ -19,8 +20,17 @@ class PlayerModule {
 
     @Singleton
     @Provides
-    fun providesMediaSession(context: Context, loader: ArtworkLoader): PlayerMediaSession {
-        return PlayerMediaSession(context, MediaSessionCompat(context, MEDIA_SESSION_TAG), loader)
+    fun providesMediaSession(
+        context: Context,
+        playerNotification: PlayerNotification,
+        artworkLoader: ArtworkLoader
+    ): PlayerMediaSession {
+        return PlayerMediaSession(
+            context,
+            MediaSessionCompat(context, MEDIA_SESSION_TAG),
+            playerNotification,
+            artworkLoader
+        )
     }
 
     @Singleton
