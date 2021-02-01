@@ -10,14 +10,13 @@ import com.downstairs.genplayer.SplitPlayer
 
 class PlayerServiceConnection(private val context: Context) : ServiceConnection {
 
-    private var isConnected = false
     private var onConnect: (SplitPlayer) -> Unit = {}
     private var player: SplitPlayer? = null
 
     fun connect(onConnect: (SplitPlayer) -> Unit) {
         this.onConnect = onConnect
 
-        if (isConnected) player?.also(onConnect) else bindService()
+        if (isConnected()) player?.also(onConnect) else bindService()
     }
 
     fun disconnect() {
@@ -36,12 +35,12 @@ class PlayerServiceConnection(private val context: Context) : ServiceConnection 
 
             player = binder.getPlayer()
             onConnect(player!!)
-            isConnected = true
         }
     }
 
     override fun onServiceDisconnected(componentName: ComponentName?) {
-        isConnected = false
         player = null
     }
+
+    private fun isConnected() = player != null
 }
