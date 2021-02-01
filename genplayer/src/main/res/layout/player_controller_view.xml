@@ -88,8 +88,7 @@
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@id/exo_progress"
             android:layout_width="0dp"
-            android:layout_height="26dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             app:buffered_color="@color/red_200"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
