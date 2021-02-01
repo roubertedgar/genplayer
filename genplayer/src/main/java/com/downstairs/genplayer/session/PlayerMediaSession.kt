@@ -26,10 +26,8 @@ class PlayerMediaSession @Inject constructor(
     }
 
     fun setSessionListener(sessionListener: SessionListener) {
-        val mediaSessionCallback = MediaSessionCallback(sessionListener)
-
-        actionReceiver.setMediaCallback(mediaSessionCallback)
-        mediaSession.setCallback(mediaSessionCallback)
+        mediaSession.setCallback(MediaSessionCallback(sessionListener))
+        actionReceiver.setMediaActionListener(sessionListener)
         notification.setNotificationListener(sessionListener)
     }
 
