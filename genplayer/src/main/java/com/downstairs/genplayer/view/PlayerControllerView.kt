@@ -41,24 +41,20 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 
     private fun setupListeners() {
-        playPauseButton.setOnClickListener {
-            onPlayPauseClick()
-        }
-    }
-
-    private fun onPlayPauseClick() {
-        if (playPauseButton.isChecked) {
-            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
-        } else {
-            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
+        playPauseButton.setOnStateChangeListener { state ->
+            if (state == SwitchButton.State.START) {
+                context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
+            } else {
+                context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
+            }
         }
     }
 
     private fun changePlayPauseButtonState(isPlaying: Boolean) {
         if (isPlaying) {
-            playPauseButton.moveToState(AnimatedVectorButton.State.STATE_END)
+            playPauseButton.moveToState(SwitchButton.State.END)
         } else {
-            playPauseButton.moveToState(AnimatedVectorButton.State.STATE_START)
+            playPauseButton.moveToState(SwitchButton.State.START)
         }
     }
 }

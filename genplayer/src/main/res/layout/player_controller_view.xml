@@ -46,16 +46,16 @@
             app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
             app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
 
-        <com.downstairs.genplayer.view.AnimatedVectorButton
+        <com.downstairs.genplayer.view.SwitchButton
             android:id="@+id/playPauseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:end_animated_drawable="@drawable/ic_play_pause_end_avd"
+            app:drawable_end="@drawable/ic_play_pause_end_avd"
+            app:drawable_start="@drawable/ic_play_pause_start_avd"
             app:layout_constraintBottom_toTopOf="@+id/exo_progress"
             app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
             app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:start_animated_drawable="@drawable/ic_play_pause_start_avd" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <ImageButton
             android:id="@+id/exo_ffwd"
@@ -91,9 +91,20 @@
             android:layout_height="wrap_content"
             app:buffered_color="@color/red_200"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/fullScreenButton"
             app:layout_constraintStart_toStartOf="parent"
             app:played_color="@color/red_600"
             app:scrubber_color="@color/red_300" />
+
+        <com.downstairs.genplayer.view.SwitchButton
+            android:id="@+id/fullScreenButton"
+            android:layout_width="@dimen/large"
+            android:layout_height="@dimen/large"
+            android:layout_marginEnd="@dimen/tiny"
+            app:drawable_end="@drawable/exo_ic_fullscreen_exit"
+            app:drawable_start="@drawable/exo_ic_fullscreen_enter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/exo_progress" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

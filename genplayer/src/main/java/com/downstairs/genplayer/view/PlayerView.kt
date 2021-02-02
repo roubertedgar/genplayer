@@ -3,6 +3,7 @@ package com.downstairs.genplayer.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -12,9 +13,10 @@ import com.downstairs.genplayer.SplitPlayer
 import com.downstairs.genplayer.content.Content
 import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.engine.PlayerEngine
-import com.downstairs.genplayer.service.PlayerServiceController
+import com.downstairs.genplayer.service.PlayerServiceConnection
 import com.google.android.gms.cast.framework.CastButtonFactory
 import kotlinx.android.synthetic.main.player_controller_view.view.*
+import kotlinx.android.synthetic.main.player_surface_layout.view.*
 import kotlinx.android.synthetic.main.player_view.view.*
 
 class PlayerView @JvmOverloads constructor(
@@ -23,11 +25,9 @@ class PlayerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), LifecycleObserver {
 
-    private val serviceController = PlayerServiceController(context)
-
-    fun setLifecycleOwner(lifecycleOwner: LifecycleOwner) {
-        lifecycleOwner.lifecycle.addObserver(this)
-    }
+    private val serviceConnection = PlayerServiceConnection(context)
+    private val activity: FragmentActivity?
+        get() = context as? FragmentActivity
 
     init {
         inflate(context, R.layout.player_view, this)
@@ -37,10 +37,21 @@ class PlayerView @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         CastButtonFactory.setUpMediaRouteButton(context, castButton)
+        setupListeners()
+    }
+
+    private fun setupListeners() {
+//        fullScreenButton.setOnClickListener {
+//            activity?.also { FullScreenDialog(it).show(this) }
+//        }
+    }
+
+    fun setLifecycleOwner(lifecycleOwner: LifecycleOwner) {
+        lifecycleOwner.lifecycle.addObserver(this)
     }
 
     fun load(vararg content: Content) {
-        serviceController.connect { player ->
+        serviceConnection.connect { player ->
             bindView(player)
             player.addContent(content[0])
         }
@@ -56,6 +67,6 @@ class PlayerView @JvmOverloads constructor(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
-        serviceController.disconnect()
+        serviceConnection.disconnect()
     }
 }
