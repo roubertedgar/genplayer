@@ -24,7 +24,6 @@ class SwitchButton @JvmOverloads constructor(
     private val startAnimatedDrawable =
         getDrawable(R.styleable.SwitchButton_drawable_start, endAnimatedDrawable)
 
-
     private var onStateChanged: (State) -> Unit = {}
 
     var state: State = State.START
