@@ -11,6 +11,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.SplitPlayer
 import com.downstairs.genplayer.content.Content
+import com.downstairs.genplayer.databinding.PlayerViewBinding
 import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.engine.PlayerEngine
 import com.downstairs.genplayer.service.PlayerServiceConnection
@@ -25,13 +26,11 @@ class PlayerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), LifecycleObserver {
 
+    private val biding = PlayerViewBinding.bind(inflate(context, R.layout.player_view, this))
+
     private val serviceConnection = PlayerServiceConnection(context)
     private val activity: FragmentActivity?
         get() = context as? FragmentActivity
-
-    init {
-        inflate(context, R.layout.player_view, this)
-    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -41,6 +40,7 @@ class PlayerView @JvmOverloads constructor(
     }
 
     private fun setupListeners() {
+        playerViewSurface.exo_controller
 //        fullScreenButton.setOnClickListener {
 //            activity?.also { FullScreenDialog(it).show(this) }
 //        }
@@ -70,3 +70,6 @@ class PlayerView @JvmOverloads constructor(
         serviceConnection.disconnect()
     }
 }
+
+val PlayerViewBinding.controller: PlayerControllerView
+    get() = playerViewSurface.exo_controller

@@ -41,12 +41,23 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 
     private fun setupListeners() {
-        playPauseButton.setOnStateChangeListener { state ->
-            if (state == SwitchButton.State.START) {
-                context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
-            } else {
-                context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
-            }
+        playPauseButton.setOnStateChangeListener { onSwitchPlayPause(it) }
+        fullScreenButton.setOnStateChangeListener { onSwitchFullScreen(it) }
+    }
+
+    private fun onSwitchPlayPause(state: SwitchButton.State) {
+        if (state == SwitchButton.State.START) {
+            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
+        } else {
+            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
+        }
+    }
+
+    private fun onSwitchFullScreen(state: SwitchButton.State) {
+        if (state == SwitchButton.State.START) {
+            //exit from full screen
+        } else {
+            //enter on full screen
         }
     }
 
