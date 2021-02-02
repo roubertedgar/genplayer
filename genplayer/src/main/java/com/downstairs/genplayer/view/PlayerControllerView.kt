@@ -41,8 +41,8 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 
     private fun setupListeners() {
-        playPauseButton.setOnStateChangeListener { onSwitchPlayPause(it) }
-        fullScreenButton.setOnStateChangeListener { onSwitchFullScreen(it) }
+        playPauseButton.setOnSwitchListener { onSwitchPlayPause(it) }
+        fullScreenButton.setOnSwitchListener { onSwitchFullScreen(it) }
     }
 
     private fun onSwitchPlayPause(state: SwitchButton.State) {
@@ -55,17 +55,17 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun onSwitchFullScreen(state: SwitchButton.State) {
         if (state == SwitchButton.State.START) {
-            //exit from full screen
+            exo_progress.showScrubber(300)
         } else {
-            //enter on full screen
+            exo_progress.hideScrubber(300)
         }
     }
 
     private fun changePlayPauseButtonState(isPlaying: Boolean) {
         if (isPlaying) {
-            playPauseButton.moveToState(SwitchButton.State.END)
+            playPauseButton.setState(SwitchButton.State.END)
         } else {
-            playPauseButton.moveToState(SwitchButton.State.START)
+            playPauseButton.setState(SwitchButton.State.START)
         }
     }
 }
