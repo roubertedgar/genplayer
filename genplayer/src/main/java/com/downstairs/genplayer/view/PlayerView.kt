@@ -2,6 +2,7 @@ package com.downstairs.genplayer.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.player_controller_view.view.*
 import kotlinx.android.synthetic.main.player_surface_layout.view.*
 import kotlinx.android.synthetic.main.player_view.view.*
 
+
 class PlayerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -37,10 +39,16 @@ class PlayerView @JvmOverloads constructor(
 
         CastButtonFactory.setUpMediaRouteButton(context, castButton)
         setupListeners()
+        biding.playerTimeBar.translationY = context.convertDpToPixel(11f)
+        biding.playerTimeBar.setPadding(
+            context.convertDpToPixel(-8f).toInt(), 0,
+            context.convertDpToPixel(-8f).toInt(), 0
+        )
+        biding.playerViewSurface.playerViewController.setTimeBar(biding.playerTimeBar)
     }
 
     private fun setupListeners() {
-        playerViewSurface.exo_controller
+
 //        fullScreenButton.setOnClickListener {
 //            activity?.also { FullScreenDialog(it).show(this) }
 //        }
@@ -60,6 +68,7 @@ class PlayerView @JvmOverloads constructor(
     private fun bindView(splitPlayer: SplitPlayer) {
         splitPlayer.addEngineListener(object : EngineObserver {
             override fun onEngineChanged(engine: PlayerEngine) {
+                biding.playerViewSurface.playerViewController.setPlayer(engine.player)
                 playerViewSurface.setPlayer(engine)
             }
         })
@@ -71,5 +80,13 @@ class PlayerView @JvmOverloads constructor(
     }
 }
 
-val PlayerViewBinding.controller: PlayerControllerView
-    get() = playerViewSurface.exo_controller
+val PlayerViewBinding.playerViewController: PlayerControllerView
+    get() = playerViewSurface.playerViewController
+
+fun Context.convertDpToPixel(dp: Float): Float {
+    return dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun Context.convertPixelsToDp(px: Float): Float {
+    return px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}

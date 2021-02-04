@@ -52,13 +52,13 @@
             android:layout_height="wrap_content"
             app:drawable_end="@drawable/ic_play_pause_end_avd"
             app:drawable_start="@drawable/ic_play_pause_start_avd"
-            app:layout_constraintBottom_toTopOf="@+id/exo_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
             app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <ImageButton
-            android:id="@+id/exo_ffwd"
+            android:id="@+id/fastForwardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_forward"
@@ -68,7 +68,7 @@
             app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
 
         <ImageButton
-            android:id="@+id/exo_rew"
+            android:id="@+id/rewindButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_backward"
@@ -85,17 +85,6 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".50" />
 
-        <com.google.android.exoplayer2.ui.DefaultTimeBar
-            android:id="@id/exo_progress"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:buffered_color="@color/red_200"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/fullScreenButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:played_color="@color/red_600"
-            app:scrubber_color="@color/red_300" />
-
         <com.downstairs.genplayer.view.SwitchButton
             android:id="@+id/fullScreenButton"
             android:layout_width="@dimen/large"
@@ -104,7 +93,6 @@
             app:drawable_end="@drawable/exo_ic_fullscreen_exit"
             app:drawable_start="@drawable/exo_ic_fullscreen_enter"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/exo_progress" />
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
