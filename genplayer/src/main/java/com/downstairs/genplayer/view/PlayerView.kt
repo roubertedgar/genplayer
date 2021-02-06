@@ -39,16 +39,13 @@ class PlayerView @JvmOverloads constructor(
 
         CastButtonFactory.setUpMediaRouteButton(context, castButton)
         setupListeners()
-        biding.playerTimeBar.translationY = context.convertDpToPixel(11f)
-        biding.playerTimeBar.setPadding(
-            context.convertDpToPixel(-8f).toInt(), 0,
-            context.convertDpToPixel(-8f).toInt(), 0
-        )
         biding.playerViewSurface.playerViewController.setTimeBar(biding.playerTimeBar)
     }
 
     private fun setupListeners() {
-
+        biding.playerViewSurface.placeHolderControlView.setOnClickListener {
+            biding.playerViewController.show()
+        }
 //        fullScreenButton.setOnClickListener {
 //            activity?.also { FullScreenDialog(it).show(this) }
 //        }
