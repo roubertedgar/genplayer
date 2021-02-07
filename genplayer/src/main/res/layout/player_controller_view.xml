@@ -90,6 +90,7 @@
             android:layout_width="@dimen/large"
             android:layout_height="@dimen/large"
             android:layout_marginEnd="@dimen/tiny"
+            android:layout_marginBottom="40dp"
             app:drawable_end="@drawable/exo_ic_fullscreen_exit"
             app:drawable_start="@drawable/exo_ic_fullscreen_enter"
             app:layout_constraintBottom_toBottomOf="parent"

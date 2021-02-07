@@ -1,40 +1,59 @@
 package com.downstairs.genplayer.view
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import com.downstairs.genplayer.R
 import kotlinx.android.synthetic.main.full_screen_player_dialog.*
 
-class FullScreenDialog(private val ownerActivity: FragmentActivity) :
-    Dialog(ownerActivity, android.R.style.Theme_NoTitleBar_Fullscreen) {
+class FullScreenDialog(context: Context) :
+    Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+
+    private var playerViewSurface: PlayerViewSurface? = null
 
     init {
         setContentView(R.layout.full_screen_player_dialog)
+
+        (context as? Activity)?.also {
+            setOwnerActivity(it)
+        }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        toFullScreen()
-    }
 
-    fun show(playerView: PlayerView) {
-        playerView.removeParent()
-        playerViewContainer.addView(
-            playerView,
+        toFullScreen()
+
+        playerViewSurface?.removeParent()
+
+        playerViewFullScreenContainer.addView(
+            playerViewSurface,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         )
 
+        playerViewSurface?.biding?.playerViewController?.toFullScreenMode()
+    }
+
+    fun show(playerViewSurface: PlayerViewSurface) {
+        if (ownerActivity == null) return
+
+        this.playerViewSurface = playerViewSurface
         show()
     }
 
+    override fun dismiss() {
+        exitFullScreen()
+        super.dismiss()
+    }
+
     private fun toFullScreen() {
-        ownerActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        ownerActivity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
         window?.decorView.apply {
             this?.systemUiVisibility = (
@@ -50,9 +69,16 @@ class FullScreenDialog(private val ownerActivity: FragmentActivity) :
     }
 
     private fun exitFullScreen() {
-        ownerActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        ownerActivity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         window?.decorView?.systemUiVisibility =
             (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_VISIBLE)
+
+        playerViewSurface?.biding?.playerViewController?.toPortraitMode()
+        playerViewSurface?.removeParent()
+    }
+
+    override fun onBackPressed() {
+        playerViewSurface?.biding?.playerViewController?.toPortraitMode()
     }
 }
 

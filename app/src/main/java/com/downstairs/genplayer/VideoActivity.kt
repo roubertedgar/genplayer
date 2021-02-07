@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.downstairs.genplayer.content.HLSContentFactory
 import com.downstairs.genplayer.view.PlayerView
+import com.downstairs.genplayer.view.PlayerViewSurface
 
 class VideoActivity : AppCompatActivity(R.layout.video_activity) {
 

@@ -24,21 +24,21 @@ class SwitchButton @JvmOverloads constructor(
     private val startAnimatedDrawable =
         getDrawable(R.styleable.SwitchButton_drawable_start, endAnimatedDrawable)
 
-    private var state: State = State.START
     private var onSwitch: (State) -> Unit = {}
+
+    var state: State = State.START
+        set(value) {
+            if (field == value) return
+
+            field = value
+            chooseAnimatedDrawable()
+            startAnimation()
+        }
 
     init {
         isClickable = true
         isFocusable = true
         chooseAnimatedDrawable()
-    }
-
-    fun setState(state: State) {
-        if (this.state == state) return
-
-        this.state = state
-        chooseAnimatedDrawable()
-        startAnimation()
     }
 
     fun setOnSwitchListener(onSwitch: (State) -> Unit) {
@@ -52,7 +52,7 @@ class SwitchButton @JvmOverloads constructor(
 
     private fun switchState() {
         val state = if (state == State.START) State.END else State.START
-        setState(state)
+        this.state = state
 
         onSwitch(state)
     }

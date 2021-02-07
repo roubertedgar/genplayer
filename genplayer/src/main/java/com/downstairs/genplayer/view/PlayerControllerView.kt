@@ -3,11 +3,13 @@ package com.downstairs.genplayer.view
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PAUSE
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PLAY
+import com.downstairs.genplayer.tools.Orientation
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.DiscontinuityReason
 import com.google.android.exoplayer2.Player.STATE_BUFFERING
@@ -28,12 +30,14 @@ class PlayerControllerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private var listener: ControllerListener = object : ControllerListener {}
     private val componentListener = ComponentListener()
+
     private var progressTimer = ViewTimer(Job())
     private var hideTimer = ViewTimer(Job())
 
-    private var timeBar: DefaultTimeBar? = null
     private var player: Player? = null
+    private var timeBar: DefaultTimeBar? = null
 
     init {
         inflate(context, R.layout.player_controller_view, this)
@@ -44,13 +48,7 @@ class PlayerControllerView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         setupListeners()
-    }
-
-    override fun onDetachedFromWindow() {
-        hideTimer.cancel()
-        progressTimer.cancel()
-
-        super.onDetachedFromWindow()
+        initTimers()
     }
 
     override fun performClick(): Boolean {
@@ -58,25 +56,29 @@ class PlayerControllerView @JvmOverloads constructor(
         return super.performClick()
     }
 
+    fun setListener(listener: ControllerListener) {
+        this.listener = listener
+    }
+
     fun setPlayer(player: Player) {
-        player.addListener(componentListener)
-        initTimers()
         this.player = player
+        this.player?.addListener(componentListener)
+
+        updateTimeline()
     }
 
     fun setTimeBar(timeBar: DefaultTimeBar) {
-        timeBar.addListener(componentListener)
+        this.timeBar = null
         this.timeBar = timeBar
+        this.timeBar?.addListener(componentListener)
 
-        morphTimeBar()
-    }
+        if (fullScreenButton.state == SwitchButton.State.START) {
+            this.timeBar?.moveToBottom()
+        } else {
+            this.timeBar?.resetPosition()
+        }
 
-    private fun morphTimeBar() {
-        timeBar?.translationY = context.convertDpToPixel(11f)
-        timeBar?.setPadding(
-            context.convertDpToPixel(-8f).toInt(), 0,
-            context.convertDpToPixel(-8f).toInt(), 0
-        )
+        updateTimeline()
     }
 
     fun show() {
@@ -127,48 +129,6 @@ class PlayerControllerView @JvmOverloads constructor(
         safeSeek(-DEFAULT_SEEK_TIME_MS)
     }
 
-    private fun updateTimeline() {
-        timeBar?.setDuration(player?.duration ?: 0)
-        updateProgress()
-    }
-
-
-    private fun updateProgress() {
-        player?.also {
-            timeBar?.setPosition(it.currentPosition)
-            timeBar?.setBufferedPosition(it.bufferedPosition)
-        }
-    }
-
-    private fun updatePlayerButton(isPlaying: Boolean) {
-        if (isPlaying) {
-            playPauseButton.setState(SwitchButton.State.END)
-        } else {
-            playPauseButton.setState(SwitchButton.State.START)
-        }
-    }
-
-    private fun onSwitchPlayPause(state: SwitchButton.State) {
-        if (state == SwitchButton.State.START) {
-            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
-        } else {
-            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
-        }
-    }
-
-    private fun onSwitchFullScreen(state: SwitchButton.State) {
-        if (state == SwitchButton.State.START) {
-
-        } else {
-
-        }
-    }
-
-    private fun initTimers() {
-        show()
-        progressTimer = repeat(MAX_PROGRESS_UPDATE_MS, this::updateProgress)
-    }
-
     private fun safeSeek(offsetPosition: Long) {
         player?.also {
             val duration = it.duration
@@ -184,6 +144,61 @@ class PlayerControllerView @JvmOverloads constructor(
         }
     }
 
+    private fun updateTimeline() {
+        player?.also { timeBar?.setDuration(it.duration) }
+    }
+
+    private fun updateProgress() {
+        player?.also {
+            timeBar?.setPosition(it.currentPosition)
+            timeBar?.setBufferedPosition(it.bufferedPosition)
+        }
+    }
+
+    private fun updatePlayerButton(isPlaying: Boolean) {
+        if (isPlaying) {
+            playPauseButton.state = SwitchButton.State.END
+        } else {
+            playPauseButton.state = SwitchButton.State.START
+        }
+    }
+
+    private fun onSwitchPlayPause(state: SwitchButton.State) {
+        if (state == SwitchButton.State.START) {
+            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
+        } else {
+            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
+        }
+    }
+
+    private fun onSwitchFullScreen(state: SwitchButton.State) {
+        if (state == SwitchButton.State.START) {
+            listener.onOrientationRequested(Orientation.PORTRAIT)
+        } else {
+            listener.onOrientationRequested(Orientation.LANDSCAPE)
+        }
+    }
+
+    fun toFullScreenMode() {
+        listener.onOrientationChanged(Orientation.LANDSCAPE)
+    }
+
+    fun toPortraitMode() {
+        listener.onOrientationChanged(Orientation.PORTRAIT)
+    }
+
+    private fun initTimers() {
+        cancelTimers()
+
+        show()
+        progressTimer = repeat(MAX_PROGRESS_UPDATE_MS, this::updateProgress)
+    }
+
+    private fun cancelTimers() {
+        hideTimer.cancel()
+        progressTimer.cancel()
+    }
+
     inner class ComponentListener : Player.EventListener, OnScrubListener {
         //player
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -197,7 +212,6 @@ class PlayerControllerView @JvmOverloads constructor(
         override fun onPositionDiscontinuity(@DiscontinuityReason reason: Int) {
             updateTimeline()
         }
-        //endplayer
 
         //timebar
         override fun onPlaybackStateChanged(state: Int) {
@@ -219,4 +233,20 @@ class PlayerControllerView @JvmOverloads constructor(
             }
         }
     }
+
+    override fun onDetachedFromWindow() {
+        cancelTimers()
+        super.onDetachedFromWindow()
+    }
+}
+
+interface ControllerListener {
+
+    fun onHide() {}
+
+    fun onShow() {}
+
+    fun onOrientationRequested(orientation: Orientation) {}
+
+    fun onOrientationChanged(orientation: Orientation) {}
 }
