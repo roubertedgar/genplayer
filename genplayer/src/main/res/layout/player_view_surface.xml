@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playerViewFullScreenContainer"
@@ -40,23 +39,23 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/surfaceView" />
-
+            app:layout_constraintEnd_toEndOf="@id/surfaceView"
+            app:layout_constraintStart_toStartOf="@id/surfaceView"
+            app:layout_constraintTop_toTopOf="@id/surfaceView" />
 
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@+id/playerTimeBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:buffered_color="@color/red_200"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/surfaceView"
             app:played_color="@color/red_600"
             app:scrubber_color="@color/red_300" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
