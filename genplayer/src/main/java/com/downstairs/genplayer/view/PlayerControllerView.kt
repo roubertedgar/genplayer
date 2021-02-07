@@ -198,7 +198,13 @@ class PlayerControllerView @JvmOverloads constructor(
         progressTimer.cancel()
     }
 
+    override fun onDetachedFromWindow() {
+        cancelTimers()
+        super.onDetachedFromWindow()
+    }
+
     inner class ComponentListener : Player.EventListener, OnScrubListener {
+
         //player
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             updatePlayerButton(isPlaying)
@@ -225,17 +231,10 @@ class PlayerControllerView @JvmOverloads constructor(
         override fun onScrubMove(timeBar: TimeBar, position: Long) {
 
         }
-
         override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
             if (!canceled) {
                 player?.seekTo(position)
             }
         }
     }
-
-    override fun onDetachedFromWindow() {
-        cancelTimers()
-        super.onDetachedFromWindow()
-    }
 }
-
