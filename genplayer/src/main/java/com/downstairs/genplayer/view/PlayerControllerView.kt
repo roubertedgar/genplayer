@@ -71,10 +71,10 @@ class PlayerControllerView @JvmOverloads constructor(
         this.timeBar = timeBar
         this.timeBar?.addListener(componentListener)
 
-        if (fullScreenButton.state == SwitchButton.State.START) {
-            this.timeBar?.moveToBottom()
-        } else {
+        if (isOnFullScreen()) {
             this.timeBar?.resetPosition()
+        } else {
+            this.timeBar?.moveToBottom()
         }
 
         updateTimeline()
@@ -97,13 +97,14 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun showViews() {
         isVisible = true
-        timeBar?.showScrubber(300L)
+        timeBar?.show()
     }
 
     private fun hideViews() {
         isVisible = false
-        timeBar?.hideScrubber(300L)
+        timeBar?.hide(isOnFullScreen())
     }
+
 
     private fun hideAfterTimeout() {
         hideTimer.cancel()
@@ -198,6 +199,8 @@ class PlayerControllerView @JvmOverloads constructor(
         progressTimer.cancel()
     }
 
+    private fun isOnFullScreen() = fullScreenButton.state == SwitchButton.State.END
+
     override fun onDetachedFromWindow() {
         cancelTimers()
         super.onDetachedFromWindow()
@@ -231,6 +234,7 @@ class PlayerControllerView @JvmOverloads constructor(
         override fun onScrubMove(timeBar: TimeBar, position: Long) {
 
         }
+
         override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
             if (!canceled) {
                 player?.seekTo(position)
