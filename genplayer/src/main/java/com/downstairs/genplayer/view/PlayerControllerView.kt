@@ -3,7 +3,6 @@ package com.downstairs.genplayer.view
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
@@ -18,7 +17,7 @@ import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.ui.TimeBar.OnScrubListener
 import kotlinx.android.synthetic.main.player_controller_view.view.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
 
 private const val MAX_PROGRESS_UPDATE_MS = 1000L
 private const val DEFAULT_HIDE_DELAY_MS = 5000L
@@ -240,13 +239,3 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 }
 
-interface ControllerListener {
-
-    fun onHide() {}
-
-    fun onShow() {}
-
-    fun onOrientationRequested(orientation: Orientation) {}
-
-    fun onOrientationChanged(orientation: Orientation) {}
-}
