@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playerViewFullScreenContainer"
@@ -21,18 +22,39 @@
             app:layout_constraintVertical_bias="0.0"
             app:player_layout_id="@layout/player_surface_layout"
             app:show_buffering="never"
-            app:use_controller="false">
+            app:use_controller="false" />
 
-        </com.google.android.exoplayer2.ui.PlayerView>
+        <View
+            android:id="@+id/placeHolderControlView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="@id/surfaceView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/surfaceView" />
+
+        <com.downstairs.genplayer.view.PlayerControllerView
+            android:id="@+id/playerViewController"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/surfaceView" />
+
 
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@+id/playerTimeBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:buffered_color="@color/red_200"
-            app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/surfaceView"
             app:played_color="@color/red_600"
             app:scrubber_color="@color/red_300" />
     </androidx.constraintlayout.widget.ConstraintLayout>

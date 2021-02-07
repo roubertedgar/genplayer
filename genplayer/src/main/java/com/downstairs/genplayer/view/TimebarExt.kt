@@ -4,7 +4,7 @@ import androidx.core.view.isVisible
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 
 fun DefaultTimeBar.moveToBottom() {
-    translationY = context.convertDpToPixel(11f)
+    translationY = context.convertDpToPixel(-11f)
     setPadding(
         context.convertDpToPixel(-8f).toInt(), 0,
         context.convertDpToPixel(-8f).toInt(), 0
@@ -12,7 +12,7 @@ fun DefaultTimeBar.moveToBottom() {
 }
 
 fun DefaultTimeBar.resetPosition() {
-    translationY = context.convertDpToPixel(-11f)
+    translationY = context.convertDpToPixel(-22f)
     setPadding(
         context.convertDpToPixel(16f).toInt(), 0,
         context.convertDpToPixel(16f).toInt(), 0

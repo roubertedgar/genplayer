@@ -40,12 +40,14 @@ class PlayerControllerView @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.player_controller_view, this)
+
         isClickable = true
         isFocusable = true
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
         setupListeners()
         initTimers()
     }
@@ -157,7 +159,7 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun updatePlayerButton(isPlaying: Boolean) {
         if (isPlaying) {
-            playPauseButton.state = SwitchButton.State.END
+           playPauseButton.state = SwitchButton.State.END
         } else {
             playPauseButton.state = SwitchButton.State.START
         }
@@ -223,7 +225,7 @@ class PlayerControllerView @JvmOverloads constructor(
 
         //timebar
         override fun onPlaybackStateChanged(state: Int) {
-            bufferingSpinProgress.isVisible = state == STATE_BUFFERING
+           bufferingSpinProgress.isVisible = state == STATE_BUFFERING
             updateProgress()
         }
 

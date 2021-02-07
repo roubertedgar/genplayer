@@ -54,10 +54,6 @@ fun AndroidExtension.applyCommonConfigs() {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures.apply {
-        viewBinding = true
-    }
-
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_1_8

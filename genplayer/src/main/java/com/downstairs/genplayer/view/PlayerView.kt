@@ -3,12 +3,11 @@ package com.downstairs.genplayer.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.content.Content
-import com.downstairs.genplayer.databinding.PlayerViewBinding
 import com.downstairs.genplayer.tools.Orientation
+import kotlinx.android.synthetic.main.player_view.view.*
 
 class PlayerView @JvmOverloads constructor(
     context: Context,
@@ -16,31 +15,34 @@ class PlayerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val biding = PlayerViewBinding.bind(inflate(context, R.layout.player_view, this))
     private val fullScreenDialog: FullScreenDialog = FullScreenDialog(context)
+
+    init {
+        inflate(context, R.layout.player_view, this)
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
-        biding.playerViewSurface.setOrientationListener { orientation ->
+        playerViewSurface.setOrientationListener { orientation ->
             onOrientationChanged(orientation)
         }
     }
 
     fun setLifecycleOwner(lifecycleOwner: LifecycleOwner) {
-        biding.playerViewSurface.setLifecycleOwner(lifecycleOwner)
+        playerViewSurface.setLifecycleOwner(lifecycleOwner)
     }
 
     private fun onOrientationChanged(orientation: Orientation) {
         if (orientation == Orientation.LANDSCAPE) {
-            fullScreenDialog.show(biding.playerViewSurface)
+            fullScreenDialog.show(playerViewSurface)
         } else {
             fullScreenDialog.dismiss()
-            addView(biding.playerViewSurface)
+            addView(playerViewSurface)
         }
     }
 
     fun load(vararg content: Content) {
-        biding.playerViewSurface.load(*content)
+        playerViewSurface.load(*content)
     }
 }
