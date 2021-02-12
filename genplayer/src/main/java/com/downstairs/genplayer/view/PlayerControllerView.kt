@@ -13,7 +13,6 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.DiscontinuityReason
 import com.google.android.exoplayer2.Player.STATE_BUFFERING
 import com.google.android.exoplayer2.Timeline
-import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.ui.TimeBar.OnScrubListener
 import kotlinx.android.synthetic.main.player_controller_view.view.*
@@ -36,7 +35,6 @@ class PlayerControllerView @JvmOverloads constructor(
     private var hideTimer = ViewTimer(Job())
 
     private var player: Player? = null
-    private var timeBar: DefaultTimeBar? = null
 
     init {
         inflate(context, R.layout.player_controller_view, this)
@@ -49,6 +47,7 @@ class PlayerControllerView @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         setupListeners()
+        setupViewOrientation()
         initTimers()
     }
 
@@ -64,20 +63,6 @@ class PlayerControllerView @JvmOverloads constructor(
     fun setPlayer(player: Player) {
         this.player = player
         this.player?.addListener(componentListener)
-
-        updateTimeline()
-    }
-
-    fun setTimeBar(timeBar: DefaultTimeBar) {
-        this.timeBar = null
-        this.timeBar = timeBar
-        this.timeBar?.addListener(componentListener)
-
-        if (isOnFullScreen()) {
-            this.timeBar?.resetPosition()
-        } else {
-            this.timeBar?.moveToBottom()
-        }
 
         updateTimeline()
     }
@@ -99,14 +84,13 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun showViews() {
         isVisible = true
-        timeBar?.show()
+        playerTimeBar.show()
     }
 
     private fun hideViews() {
         isVisible = false
-        timeBar?.hide(isOnFullScreen())
+        playerTimeBar.hide(isOnFullScreen())
     }
-
 
     private fun hideAfterTimeout() {
         hideTimer.cancel()
@@ -121,6 +105,16 @@ class PlayerControllerView @JvmOverloads constructor(
         fastForwardButton.setOnClickListener { seek() }
         playPauseButton.setOnSwitchListener { onSwitchPlayPause(it) }
         fullScreenButton.setOnSwitchListener { onSwitchFullScreen(it) }
+
+        playerTimeBar.addListener(componentListener)
+    }
+
+    private fun setupViewOrientation() {
+        if (isOnFullScreen()) {
+            toFullScreenMode()
+        } else {
+            toPortraitMode()
+        }
     }
 
     private fun seek() {
@@ -147,19 +141,19 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 
     private fun updateTimeline() {
-        player?.also { timeBar?.setDuration(it.duration) }
+        player?.also { playerTimeBar.setDuration(it.duration) }
     }
 
     private fun updateProgress() {
         player?.also {
-            timeBar?.setPosition(it.currentPosition)
-            timeBar?.setBufferedPosition(it.bufferedPosition)
+            playerTimeBar.setPosition(it.currentPosition)
+            playerTimeBar.setBufferedPosition(it.bufferedPosition)
         }
     }
 
     private fun updatePlayerButton(isPlaying: Boolean) {
         if (isPlaying) {
-           playPauseButton.state = SwitchButton.State.END
+            playPauseButton.state = SwitchButton.State.END
         } else {
             playPauseButton.state = SwitchButton.State.START
         }
@@ -183,10 +177,14 @@ class PlayerControllerView @JvmOverloads constructor(
 
     fun toFullScreenMode() {
         listener.onOrientationChanged(Orientation.LANDSCAPE)
+        playerTimeBar.toFullScreenConstraints()
+        buttonsContainer.setBottomMargin(0f)
     }
 
     fun toPortraitMode() {
         listener.onOrientationChanged(Orientation.PORTRAIT)
+        playerTimeBar.toPortraitConstraints()
+        buttonsContainer.setBottomMargin(playerTimeBar.barTopHeight)
     }
 
     private fun initTimers() {
@@ -225,7 +223,7 @@ class PlayerControllerView @JvmOverloads constructor(
 
         //timebar
         override fun onPlaybackStateChanged(state: Int) {
-           bufferingSpinProgress.isVisible = state == STATE_BUFFERING
+            bufferingSpinProgress.isVisible = state == STATE_BUFFERING
             updateProgress()
         }
 

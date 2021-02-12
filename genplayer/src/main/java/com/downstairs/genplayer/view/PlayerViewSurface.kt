@@ -15,6 +15,7 @@ import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.engine.PlayerEngine
 import com.downstairs.genplayer.service.PlayerServiceConnection
 import com.downstairs.genplayer.tools.Orientation
+import kotlinx.android.synthetic.main.player_controller_view.view.*
 import kotlinx.android.synthetic.main.player_view_surface.view.*
 
 class PlayerViewSurface @JvmOverloads constructor(
@@ -32,13 +33,7 @@ class PlayerViewSurface @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
         setupListeners()
-        setupController()
-    }
-
-    private fun setupController() {
-        playerViewController.setTimeBar(playerTimeBar)
     }
 
     private fun setupListeners() {
@@ -83,10 +78,10 @@ class PlayerViewSurface @JvmOverloads constructor(
     }
 }
 
-fun Context.convertDpToPixel(dp: Float): Float {
+fun Context.dpToPixel(dp: Float): Float {
     return dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }
 
-fun Context.convertPixelsToDp(px: Float): Float {
+fun Context.pixelToDp(px: Float): Float {
     return px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }

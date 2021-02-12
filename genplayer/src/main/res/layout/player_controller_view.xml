@@ -4,97 +4,121 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_a25"
     android:theme="@style/Player.Theme"
     tools:ignore="ContentDescription">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controllerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonsContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:theme="@style/Player.Theme.Menu"
+            android:layout_height="0dp"
+            android:background="@color/black_a25"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small"
+                android:gravity="end"
+                android:orientation="horizontal"
+                android:theme="@style/Player.Theme.Menu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.mediarouter.app.MediaRouteButton
-                android:id="@+id/castButton"
-                android:layout_width="@dimen/menu_item_size"
-                android:layout_height="@dimen/menu_item_size"
-                android:layout_marginEnd="@dimen/small" />
+
+                <androidx.mediarouter.app.MediaRouteButton
+                    android:id="@+id/castButton"
+                    android:layout_width="@dimen/menu_item_size"
+                    android:layout_height="@dimen/menu_item_size"
+                    android:layout_marginEnd="@dimen/small" />
+
+                <ImageButton
+                    android:layout_width="@dimen/menu_item_size"
+                    android:layout_height="@dimen/menu_item_size"
+                    android:src="@drawable/ic_more_menu" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/bufferingSpinProgress"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
+                app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
+                app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
+                app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
+
+            <com.downstairs.genplayer.view.SwitchButton
+                android:id="@+id/playPauseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:drawable_end="@drawable/ic_play_pause_end_avd"
+                app:drawable_start="@drawable/ic_play_pause_start_avd"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
+                app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                app:layout_constraintVertical_bias="0.4" />
 
             <ImageButton
-                android:layout_width="@dimen/menu_item_size"
-                android:layout_height="@dimen/menu_item_size"
-                android:src="@drawable/ic_more_menu" />
-        </LinearLayout>
+                android:id="@+id/fastForwardButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_forward"
+                app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
+                app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
 
-        <ProgressBar
-            android:id="@+id/bufferingSpinProgress"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
-            app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
-            app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-            app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
+            <ImageButton
+                android:id="@+id/rewindButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_backward"
+                app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
+                app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
 
-        <com.downstairs.genplayer.view.SwitchButton
-            android:id="@+id/playPauseButton"
-            android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/centerVerticalGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".50" />
+
+            <com.downstairs.genplayer.view.SwitchButton
+                android:id="@+id/fullScreenButton"
+                android:layout_width="@dimen/large"
+                android:layout_height="@dimen/large"
+                android:layout_marginEnd="@dimen/normal"
+                android:layout_marginBottom="24dp"
+                app:drawable_end="@drawable/exo_ic_fullscreen_exit"
+                app:drawable_start="@drawable/exo_ic_fullscreen_enter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.exoplayer2.ui.DefaultTimeBar
+            android:id="@+id/playerTimeBar"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:drawable_end="@drawable/ic_play_pause_end_avd"
-            app:drawable_start="@drawable/ic_play_pause_start_avd"
+            app:bar_height="@dimen/timeline_bar_height"
+            app:buffered_color="@color/red_200"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
-            app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="0.4" />
-
-        <ImageButton
-            android:id="@+id/fastForwardButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_forward"
-            app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-            app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
-
-        <ImageButton
-            android:id="@+id/rewindButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_backward"
-            app:layout_constraintBottom_toBottomOf="@+id/playPauseButton"
-            app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
-            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/playPauseButton" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/centerVerticalGuide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".50" />
-
-        <com.downstairs.genplayer.view.SwitchButton
-            android:id="@+id/fullScreenButton"
-            android:layout_width="@dimen/large"
-            android:layout_height="@dimen/large"
-            android:layout_marginEnd="@dimen/tiny"
-            android:layout_marginBottom="40dp"
-            app:drawable_end="@drawable/exo_ic_fullscreen_exit"
-            app:drawable_start="@drawable/exo_ic_fullscreen_enter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:played_color="@color/red_600"
+            app:scrubber_color="@color/red_300"
+            app:touch_target_height="@dimen/timeline_touch_height" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

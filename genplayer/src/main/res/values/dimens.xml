@@ -3,6 +3,9 @@
     <dimen name="menu_item_size">36dp</dimen>
     <dimen name="player_button_size">54dp</dimen>
 
+    <dimen name="timeline_bar_height">4dp</dimen>
+    <dimen name="timeline_touch_height">26dp</dimen>
+
     <dimen name="tiny">4dp</dimen>
     <dimen name="small">8dp</dimen>
     <dimen name="normal">16dp</dimen>
