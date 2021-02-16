@@ -16,7 +16,6 @@ import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.ui.TimeBar.OnScrubListener
 import kotlinx.android.synthetic.main.player_controller_view.view.*
-import kotlinx.coroutines.Job
 
 private const val MAX_PROGRESS_UPDATE_MS = 1000L
 private const val DEFAULT_HIDE_DELAY_MS = 5000L
@@ -31,8 +30,8 @@ class PlayerControllerView @JvmOverloads constructor(
     private var listener: ControllerListener = object : ControllerListener {}
     private val componentListener = ComponentListener()
 
-    private var progressTimer = ViewTimer(Job())
-    private var hideTimer = ViewTimer(Job())
+    private var progressTimer = ViewTimer()
+    private var hideTimer = ViewTimer()
 
     private var player: Player? = null
 
@@ -51,8 +50,18 @@ class PlayerControllerView @JvmOverloads constructor(
         initTimers()
     }
 
+    override fun onDetachedFromWindow() {
+        cancelTimers()
+        super.onDetachedFromWindow()
+    }
+
     override fun performClick(): Boolean {
-        hide()
+        if (buttonsContainer.isVisible) {
+            hide()
+        } else {
+            show()
+        }
+
         return super.performClick()
     }
 
@@ -67,36 +76,34 @@ class PlayerControllerView @JvmOverloads constructor(
         updateTimeline()
     }
 
-    fun show() {
-        if (!isVisible) {
+    private fun show() {
+        if (!isVisible()) {
             showViews()
         }
 
         hideAfterTimeout()
     }
 
-    fun hide() {
-        if (isVisible) {
+    private fun hide() {
+        if (isVisible()) {
             hideViews()
             hideTimer.cancel()
         }
     }
 
     private fun showViews() {
-        isVisible = true
+        buttonsContainer.isVisible = true
         playerTimeBar.show()
     }
 
     private fun hideViews() {
-        isVisible = false
+        buttonsContainer.isVisible = false
         playerTimeBar.hide(isOnFullScreen())
     }
 
     private fun hideAfterTimeout() {
-        hideTimer.cancel()
-
         if (isAttachedToWindow) {
-            hideTimer = schedule(DEFAULT_HIDE_DELAY_MS, this::hide)
+            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS, this::hide)
         }
     }
 
@@ -191,19 +198,16 @@ class PlayerControllerView @JvmOverloads constructor(
         cancelTimers()
 
         show()
-        progressTimer = repeat(MAX_PROGRESS_UPDATE_MS, this::updateProgress)
+        progressTimer.repeat(MAX_PROGRESS_UPDATE_MS, this::updateProgress)
     }
+
+    private fun isVisible() = buttonsContainer.isVisible
+
+    private fun isOnFullScreen() = fullScreenButton.state == SwitchButton.State.END
 
     private fun cancelTimers() {
         hideTimer.cancel()
         progressTimer.cancel()
-    }
-
-    private fun isOnFullScreen() = fullScreenButton.state == SwitchButton.State.END
-
-    override fun onDetachedFromWindow() {
-        cancelTimers()
-        super.onDetachedFromWindow()
     }
 
     inner class ComponentListener : Player.EventListener, OnScrubListener {

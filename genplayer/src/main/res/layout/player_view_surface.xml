@@ -23,17 +23,6 @@
             app:show_buffering="never"
             app:use_controller="false" />
 
-        <View
-            android:id="@+id/placeHolderControlView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="@id/surfaceView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/surfaceView" />
-
         <com.downstairs.genplayer.view.PlayerControllerView
             android:id="@+id/playerViewController"
             android:layout_width="0dp"

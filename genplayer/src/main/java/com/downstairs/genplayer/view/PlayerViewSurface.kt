@@ -42,10 +42,6 @@ class PlayerViewSurface @JvmOverloads constructor(
                 orientationListener(orientation)
             }
         })
-
-        placeHolderControlView.setOnClickListener {
-            playerViewController.show()
-        }
     }
 
     fun setOrientationListener(onChange: (Orientation) -> Unit) {
