@@ -60,8 +60,8 @@
                 android:id="@+id/playPauseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:drawable_end="@drawable/ic_play_pause_end_avd"
-                app:drawable_start="@drawable/ic_play_pause_start_avd"
+                app:drawable_final="@drawable/ic_play_pause_end_avd"
+                app:drawable_initial="@drawable/ic_play_pause_start_avd"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
                 app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
@@ -101,9 +101,9 @@
                 android:layout_width="@dimen/large"
                 android:layout_height="@dimen/large"
                 android:layout_marginEnd="@dimen/normal"
-                android:layout_marginBottom="24dp"
-                app:drawable_end="@drawable/exo_ic_fullscreen_exit"
-                app:drawable_start="@drawable/exo_ic_fullscreen_enter"
+                android:layout_marginBottom="132dp"
+                app:drawable_final="@drawable/exo_ic_fullscreen_enter"
+                app:drawable_initial="@drawable/exo_ic_fullscreen_exit"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

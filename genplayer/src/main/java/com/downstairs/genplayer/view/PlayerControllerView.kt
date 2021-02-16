@@ -160,14 +160,14 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun updatePlayerButton(isPlaying: Boolean) {
         if (isPlaying) {
-            playPauseButton.state = SwitchButton.State.END
+            playPauseButton.state = SwitchButton.State.FINAL
         } else {
-            playPauseButton.state = SwitchButton.State.START
+            playPauseButton.state = SwitchButton.State.INITIAL
         }
     }
 
     private fun onSwitchPlayPause(state: SwitchButton.State) {
-        if (state == SwitchButton.State.START) {
+        if (state == SwitchButton.State.INITIAL) {
             context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
         } else {
             context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
@@ -175,7 +175,7 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 
     private fun onSwitchFullScreen(state: SwitchButton.State) {
-        if (state == SwitchButton.State.START) {
+        if (state == SwitchButton.State.INITIAL) {
             listener.onOrientationRequested(Orientation.PORTRAIT)
         } else {
             listener.onOrientationRequested(Orientation.LANDSCAPE)
@@ -203,7 +203,7 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun isVisible() = buttonsContainer.isVisible
 
-    private fun isOnFullScreen() = fullScreenButton.state == SwitchButton.State.END
+    private fun isOnFullScreen() = fullScreenButton.state == SwitchButton.State.FINAL
 
     private fun cancelTimers() {
         hideTimer.cancel()

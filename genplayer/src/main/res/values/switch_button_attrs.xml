@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="SwitchButton">
-        <attr name="drawable_start" format="reference" />
-        <attr name="drawable_end" format="reference" />
+        <attr name="drawable_initial" format="reference" />
+        <attr name="drawable_final" format="reference" />
     </declare-styleable>
 </resources>
