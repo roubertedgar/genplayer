@@ -94,11 +94,13 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 
     private fun showViews() {
+        bottomBarContainer.isVisible = true
         buttonsContainer.isVisible = true
         playerTimeBar.show()
     }
 
     private fun hideViews() {
+        bottomBarContainer.isVisible = false
         buttonsContainer.isVisible = false
         playerTimeBar.hide(isOnFullScreen())
     }
