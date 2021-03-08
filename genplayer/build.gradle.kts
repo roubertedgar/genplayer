@@ -51,5 +51,10 @@ dependencies {
 
     testImplementation(Dependencies.Test.jUnit)
     testImplementation(Dependencies.Test.androidxJunit)
+    testImplementation(Dependencies.Test.robolectric)
+    testImplementation(Dependencies.Test.mockitoInline)
+    testImplementation(Dependencies.Test.mockitoKotlin)
+    testImplementation("io.mockk:mockk:1.10.2")
+    testImplementation(Dependencies.Test.assertJ)
     androidTestImplementation(Dependencies.Test.espresso)
 }

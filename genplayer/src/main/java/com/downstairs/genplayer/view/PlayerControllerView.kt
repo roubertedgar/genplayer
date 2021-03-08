@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PAUSE
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PLAY
-import com.downstairs.genplayer.tools.Orientation
+import com.downstairs.genplayer.tools.orientation.Orientation
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.DiscontinuityReason
 import com.google.android.exoplayer2.Player.STATE_BUFFERING
@@ -16,10 +16,6 @@ import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.ui.TimeBar.OnScrubListener
 import kotlinx.android.synthetic.main.player_controller_view.view.*
-
-private const val MAX_PROGRESS_UPDATE_MS = 1000L
-private const val DEFAULT_HIDE_DELAY_MS = 5000L
-private const val DEFAULT_SEEK_TIME_MS = 15000L
 
 class PlayerControllerView @JvmOverloads constructor(
     context: Context,
@@ -34,6 +30,12 @@ class PlayerControllerView @JvmOverloads constructor(
     private var hideTimer = ViewTimer()
 
     private var player: Player? = null
+
+    companion object {
+        private const val MAX_PROGRESS_UPDATE_MS = 1000L
+        private const val DEFAULT_HIDE_DELAY_MS = 5000L
+        private const val DEFAULT_SEEK_TIME_MS = 15000L
+    }
 
     init {
         inflate(context, R.layout.player_controller_view, this)

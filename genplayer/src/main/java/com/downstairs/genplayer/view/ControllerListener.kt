@@ -1,6 +1,6 @@
 package com.downstairs.genplayer.view
 
-import com.downstairs.genplayer.tools.Orientation
+import com.downstairs.genplayer.tools.orientation.Orientation
 
 interface ControllerListener {
 

@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import androidx.lifecycle.LifecycleOwner
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.content.Content
-import com.downstairs.genplayer.tools.Orientation
+import com.downstairs.genplayer.tools.orientation.Orientation
 import kotlinx.android.synthetic.main.player_view.view.*
 
 class PlayerView @JvmOverloads constructor(

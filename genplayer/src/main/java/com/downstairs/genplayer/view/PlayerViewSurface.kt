@@ -14,8 +14,7 @@ import com.downstairs.genplayer.content.Content
 import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.engine.PlayerEngine
 import com.downstairs.genplayer.service.PlayerServiceConnection
-import com.downstairs.genplayer.tools.Orientation
-import kotlinx.android.synthetic.main.player_controller_view.view.*
+import com.downstairs.genplayer.tools.orientation.Orientation
 import kotlinx.android.synthetic.main.player_view_surface.view.*
 
 class PlayerViewSurface @JvmOverloads constructor(
