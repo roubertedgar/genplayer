@@ -5,7 +5,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import com.downstairs.genplayer.SplitPlayer
+import com.downstairs.genplayer.GenPlayer
 import com.downstairs.genplayer.session.SessionListener
 import com.downstairs.genplayer.content.MediaAction
 import com.downstairs.genplayer.content.MediaStatus
@@ -20,7 +20,7 @@ class PlayerService : Service() {
     lateinit var mediaSession: PlayerMediaSession
 
     @Inject
-    lateinit var splitPlayer: SplitPlayer
+    lateinit var genPlayer: GenPlayer
 
     override fun onCreate() {
         DaggerPlayerComponent.factory().create(baseContext).inject(this)
@@ -39,7 +39,7 @@ class PlayerService : Service() {
             }
         })
 
-        splitPlayer.addEngineListener(object : EngineObserver {
+        genPlayer.addEngineListener(object : EngineObserver {
 
             override fun onStateChanged(mediaStatus: MediaStatus) {
                 mediaSession.updateSession(mediaStatus)
@@ -52,7 +52,7 @@ class PlayerService : Service() {
     }
 
     private fun onMediaAction(action: MediaAction) {
-        splitPlayer.performAction(action)
+        genPlayer.performAction(action)
 
         if (action == MediaAction.Stop) {
             mediaSession.release()
@@ -64,8 +64,8 @@ class PlayerService : Service() {
     }
 
     inner class PLayerServiceBinder : Binder() {
-        fun getPlayer(): SplitPlayer {
-            return splitPlayer
+        fun getPlayer(): GenPlayer {
+            return genPlayer
         }
     }
 }

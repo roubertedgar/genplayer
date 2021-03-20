@@ -1,15 +1,15 @@
 package com.downstairs.genplayer.engine
 
-import com.downstairs.genplayer.content.*
-import com.google.android.exoplayer2.MediaItem
+import com.downstairs.genplayer.content.Content
+import com.downstairs.genplayer.content.MediaAction
+import com.downstairs.genplayer.content.MediaStatus
 import com.google.android.exoplayer2.Player
 
 abstract class PlayerEngine {
 
     abstract val player: Player
-    abstract fun getCurrentItem(): MediaItem?
+    abstract val currentContent: Content?
     abstract fun prepare(content: Content)
-    abstract fun isContentAlreadyPlaying(content: Content): Boolean
 
     private var observable = EngineObservable()
 
@@ -33,35 +33,18 @@ abstract class PlayerEngine {
             is MediaAction.Forward -> forward()
             is MediaAction.Rewind -> backward()
             is MediaAction.SeekTo -> player.seekTo(action.position)
-            is MediaAction.Stop -> stopPlayer()
+            is MediaAction.Stop -> stop()
         }
     }
 
     fun release() {
-        stopPlayer()
+        stop()
         player.release()
     }
 
-    private fun stopPlayer() {
+    private fun stop() {
         player.removeListener(listener)
         player.stop()
-    }
-
-    private fun currentMediaState(): MediaStatus {
-        val currentItem = getCurrentItem()
-        val title = currentItem?.getProperty(MediaProperty.TITLE) ?: ""
-        val description = currentItem?.getProperty(MediaProperty.DESCRIPTION) ?: ""
-        val artworkUrl = currentItem?.getProperty(MediaProperty.ARTWORK_URL) ?: ""
-
-        return MediaStatus(
-            title,
-            description,
-            player.duration,
-            artworkUrl,
-            player.currentPosition,
-            player.playbackParameters.speed,
-            player.isPlaying
-        )
     }
 
     private fun forward() {
@@ -76,5 +59,23 @@ abstract class PlayerEngine {
         val position = if (targetPosition < 0) 0 else targetPosition
 
         player.seekTo(position)
+    }
+
+    private fun currentMediaState(): MediaStatus {
+        return currentContent?.let { content ->
+            MediaStatus(
+                content.title,
+                content.description,
+                content.artworkUrl,
+                content.positionMs,
+                player.duration,
+                player.playbackParameters.speed,
+                player.isPlaying
+            )
+        } ?: MediaStatus()
+    }
+
+    fun isContentAlreadyPlaying(content: Content): Boolean {
+        return player.isPlaying && content.id != currentContent?.id
     }
 }

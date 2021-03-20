@@ -9,7 +9,7 @@ import com.downstairs.genplayer.playlist.ContentChangeListener
 import com.downstairs.genplayer.playlist.Playlist
 import javax.inject.Inject
 
-class SplitPlayer @Inject constructor(private val engineManager: EngineManager) {
+class GenPlayer @Inject constructor(private val engineManager: EngineManager) {
 
     private val playList = Playlist()
 

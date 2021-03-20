@@ -6,14 +6,14 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import androidx.core.content.ContextCompat
-import com.downstairs.genplayer.SplitPlayer
+import com.downstairs.genplayer.GenPlayer
 
 class PlayerServiceConnection(private val context: Context) : ServiceConnection {
 
-    private var onConnect: (SplitPlayer) -> Unit = {}
-    private var player: SplitPlayer? = null
+    private var onConnect: (GenPlayer) -> Unit = {}
+    private var player: GenPlayer? = null
 
-    fun connect(onConnect: (SplitPlayer) -> Unit) {
+    fun connect(onConnect: (GenPlayer) -> Unit) {
         this.onConnect = onConnect
 
         if (isConnected()) player?.also(onConnect) else bindService()

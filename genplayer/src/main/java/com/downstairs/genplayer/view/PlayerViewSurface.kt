@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.downstairs.genplayer.R
-import com.downstairs.genplayer.SplitPlayer
+import com.downstairs.genplayer.GenPlayer
 import com.downstairs.genplayer.content.Content
 import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.engine.PlayerEngine
@@ -58,8 +58,8 @@ class PlayerViewSurface @JvmOverloads constructor(
         }
     }
 
-    private fun bindView(splitPlayer: SplitPlayer) {
-        splitPlayer.addEngineListener(object : EngineObserver {
+    private fun bindView(genPlayer: GenPlayer) {
+        genPlayer.addEngineListener(object : EngineObserver {
             override fun onEngineChanged(engine: PlayerEngine) {
                 playerViewController.setPlayer(engine.player)
                 surfaceView.setPlayer(engine)

@@ -7,88 +7,57 @@ import com.google.android.exoplayer2.ext.cast.MediaItemConverter
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaQueueItem
 import org.json.JSONObject
+import com.google.android.gms.cast.MediaMetadata as CastMetadata
 
 class CustomHeaderMediaItemConverter : MediaItemConverter {
     companion object {
-        private const val KEY_MEDIA_ID = "mediaId"
-        private const val KEY_MEDIA_ITEM = "mediaItem"
-        private const val KEY_URI = "uri"
         private const val KEY_TITLE = "title"
-        private const val KEY_MIME_TYPE = "mimeType"
     }
 
     override fun toMediaQueueItem(mediaItem: MediaItem): MediaQueueItem {
-        val playbackProperties =
-            mediaItem.playbackProperties ?: throw Throwable("Invalid playback properties")
+        val metadata = createCastMetadata(mediaItem)
+        val customData = JSONObject(mediaItem.properties)
+        val headers = mediaItem.getProperty<Map<String, String>>(MediaProperty.HEADERS, mapOf())
 
-        val metadata =
-            com.google.android.gms.cast.MediaMetadata(com.google.android.gms.cast.MediaMetadata.MEDIA_TYPE_MOVIE)
-                .apply {
-                    putString(KEY_TITLE, mediaItem.mediaMetadata.title)
-                }
-
-        val mediaInfo = MediaInfo.Builder(playbackProperties.uri.toString())
-            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-            .setContentType(playbackProperties.mimeType)
+        val mediaInfo = MediaInfo.Builder(mediaItem.getProperty(MediaProperty.SOURCE, ""))
             .setMetadata(metadata)
-            .setCustomData(mediaItemToJson(mediaItem))
+            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+            .setContentType(mediaItem.getProperty(MediaProperty.TYPE, ""))
+            .setCustomData(customData)
             .build()
+
 
         return MediaQueueItem.Builder(mediaInfo)
-            .setCustomData(getCustomRequestData(mediaItem))
+            .setCustomData(JSONObject(headers))
             .build()
     }
 
-    private fun mediaItemToJson(mediaItem: MediaItem): JSONObject {
-        val playbackProperties =
-            mediaItem.playbackProperties ?: throw Throwable("Invalid playback properties")
-
-        val mediaItemJson = JSONObject().apply {
-            put(KEY_MEDIA_ID, mediaItem.mediaId)
-            put(KEY_TITLE, mediaItem.mediaMetadata.title)
-            put(KEY_URI, playbackProperties.uri.toString())
-            put(KEY_MIME_TYPE, playbackProperties.mimeType)
-        }
-
-        return JSONObject().apply {
-            put(KEY_MEDIA_ITEM, mediaItemJson)
-        }
-    }
-
-    private fun getCustomRequestData(mediaItem: MediaItem) = JSONObject().apply {
-        mediaItem.properties.forEach { property ->
-            put(property.key.value, property.value)
+    private fun createCastMetadata(mediaItem: MediaItem): CastMetadata {
+        return CastMetadata(CastMetadata.MEDIA_TYPE_MOVIE).apply {
+            putString(KEY_TITLE, mediaItem.getProperty(MediaProperty.TITLE, ""))
         }
     }
 
     override fun toMediaItem(mediaQueueItem: MediaQueueItem): MediaItem {
         val customMediaData = mediaQueueItem.media.customData ?: return MediaItem.Builder().build()
 
-        val mediaItemJson: JSONObject = customMediaData.getJSONObject(KEY_MEDIA_ITEM)
-
-        val builder = MediaItem.Builder().apply {
-            setMediaId(mediaItemJson.getString(KEY_MEDIA_ID))
-            setUri(Uri.parse(mediaItemJson.getString(KEY_URI)))
-            setMediaMetadata(getMediaMetadata(mediaItemJson))
-            setMimeType(mediaItemJson.getString(KEY_MIME_TYPE))
-            setTag(customDataToTag(mediaQueueItem.customData))
-        }
-
-        return builder.build()
-    }
-
-    private fun customDataToTag(tagJson: JSONObject): Map<MediaProperty, String> {
-        return mutableMapOf<MediaProperty, String>().apply {
-            tagJson.keys().forEach { key ->
-                put(MediaProperty.from(key), tagJson.getString(key))
-            }
-        }
-    }
-
-    private fun getMediaMetadata(mediaItemJson: JSONObject): MediaMetadata {
-        val title = mediaItemJson.getString(KEY_TITLE) ?: ""
-        return MediaMetadata.Builder()
-            .setTitle(title)
+        val mediaMetadata = MediaMetadata.Builder()
+            .setTitle(customMediaData.getString(MediaProperty.TITLE))
             .build()
+
+        return MediaItem.Builder()
+            .setMediaId(customMediaData.getString(MediaProperty.ID))
+            .setUri(Uri.parse(customMediaData.getString(MediaProperty.SOURCE)))
+            .setMediaMetadata(mediaMetadata)
+            .setMimeType(customMediaData.getString(MediaProperty.TYPE))
+            .setTag(customDataToTagProperties(customMediaData))
+            .build()
+    }
+
+    private fun customDataToTagProperties(tagJson: JSONObject): Map<String, Any> {
+        val tagProperties = mutableMapOf<String, Any>()
+        tagJson.keys().forEach { key -> tagProperties[key] = tagJson.get(key) }
+
+        return tagProperties
     }
 }

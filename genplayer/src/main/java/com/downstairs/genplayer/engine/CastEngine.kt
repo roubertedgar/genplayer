@@ -1,9 +1,7 @@
 package com.downstairs.genplayer.engine
 
 import android.content.Context
-import com.downstairs.genplayer.content.Content
-import com.downstairs.genplayer.content.CustomHeaderMediaItemConverter
-import com.google.android.exoplayer2.MediaItem
+import com.downstairs.genplayer.content.*
 import com.google.android.exoplayer2.ext.cast.CastPlayer
 import com.google.android.exoplayer2.ext.cast.SessionAvailabilityListener
 import com.google.android.gms.cast.framework.CastContext
@@ -15,18 +13,15 @@ class CastEngine @Inject constructor(context: Context) : PlayerEngine() {
     private val mediaItemConverter = CustomHeaderMediaItemConverter()
     override val player = CastPlayer(castContext, mediaItemConverter)
 
-    override fun getCurrentItem(): MediaItem? {
-        return castContext.currentItem?.let {
-            mediaItemConverter.toMediaItem(it)
+    override val currentContent: Content?
+        get() = castContext.currentItem?.let {
+            mediaItemConverter.toMediaItem(it).toContent(player.currentPosition)
         }
-    }
 
     override fun prepare(content: Content) {
-        player.setMediaItem(content.buildMediaItem(), content.positionMs)
-    }
-
-    override fun isContentAlreadyPlaying(content: Content): Boolean {
-        return player.isPlaying && content.contentId == getCurrentItem()?.mediaId
+        if (!isContentAlreadyPlaying(content)) {
+            player.setMediaItem(content.toMediaItem(), content.positionMs)
+        }
     }
 
     fun setSessionChangeListener(listener: SessionAvailabilityListener) {

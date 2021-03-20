@@ -1,5 +1,3 @@
-@file:JvmName("CustomHeaderMediaItemConverterKt")
-
 package com.downstairs.genplayer.content
 
 import com.google.android.exoplayer2.MediaItem
@@ -34,12 +32,10 @@ class CustomHeaderMediaSourceFactory : MediaSourceFactory {
     }
 
     override fun createMediaSource(mediaItem: MediaItem): MediaSource {
-        val properties = mediaItem.properties
-            .filter { it.key == MediaProperty.COOKIE || it.key == MediaProperty.COOKIES }
-            .mapKeys { it.key.value }
+        val headers = mediaItem.getProperty<Map<String, String>>(MediaProperty.HEADERS, emptyMap())
 
         val dataSource = DefaultHttpDataSourceFactory().apply {
-            defaultRequestProperties.set(properties)
+            defaultRequestProperties.set(headers)
         }
 
         return DefaultMediaSourceFactory(dataSource).createMediaSource(mediaItem)

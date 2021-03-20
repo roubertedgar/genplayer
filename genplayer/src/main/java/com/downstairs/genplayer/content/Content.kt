@@ -7,22 +7,22 @@ data class Content(
     val title: String,
     val description: String,
     val source: String,
+    val artworkUrl: String,
     val type: String,
-    val cookies: String,
-    val positionMs: Long,
-    val artworkUrl: String
+    val headers: Map<String, String>,
+    val positionMs: Long
 ) {
 
-    val contentId: String
+    val id: String
         get() = "$title-$source"
 
-    fun buildMediaItem(): MediaItem {
+    fun toMediaItem(): MediaItem {
         val mediaMetadata = MediaMetadata.Builder()
             .setTitle(title)
             .build()
 
         return MediaItem.Builder()
-            .setMediaId(contentId)
+            .setMediaId(id)
             .setUri(source)
             .setMimeType(type)
             .setMediaMetadata(mediaMetadata)
@@ -30,13 +30,15 @@ data class Content(
             .build()
     }
 
-    private fun getCustomData(): Map<MediaProperty, String> {
+    private fun getCustomData(): Map<String, Any> {
         return mapOf(
+            MediaProperty.ID to id,
             MediaProperty.TITLE to title,
             MediaProperty.DESCRIPTION to description,
+            MediaProperty.SOURCE to source,
+            MediaProperty.TYPE to type,
             MediaProperty.ARTWORK_URL to artworkUrl,
-            MediaProperty.COOKIES to cookies,
-            MediaProperty.COOKIE to cookies
+            MediaProperty.HEADERS to headers
         )
     }
 }

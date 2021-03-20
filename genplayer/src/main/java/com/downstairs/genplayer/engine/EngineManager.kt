@@ -10,13 +10,13 @@ class EngineManager @Inject constructor(
     private val castEngine: CastEngine
 ) {
 
-    private lateinit var currentEngine: PlayerEngine
+    private var currentEngine: PlayerEngine = deviceEngine
     private val engineObservable = EngineObservable()
 
     init {
         setEngineObservable()
         setSessionListener()
-        changeEngine(if (castEngine.isCastSessionAvailable()) castEngine else deviceEngine)
+        switchEngine(if (castEngine.isCastSessionAvailable()) castEngine else deviceEngine)
     }
 
     private fun setEngineObservable() {
@@ -30,10 +30,7 @@ class EngineManager @Inject constructor(
     }
 
     fun prepare(content: Content) {
-        if (!currentEngine.isContentAlreadyPlaying(content)) {
-            currentEngine.prepare(content)
-        }
-
+        currentEngine.prepare(content)
     }
 
     fun performAction(action: MediaAction) {
@@ -49,36 +46,20 @@ class EngineManager @Inject constructor(
     private fun setSessionListener() {
         castEngine.setSessionChangeListener(object : SessionAvailabilityListener {
             override fun onCastSessionAvailable() {
-                changeEngine(castEngine)
+                switchEngine(castEngine)
             }
 
             override fun onCastSessionUnavailable() {
-                changeEngine(deviceEngine)
+                switchEngine(deviceEngine)
             }
         })
     }
 
-    private fun changeEngine(engine: PlayerEngine) {
-        if (isEngineNotInitialized()) {
-            initializeEngine(engine)
-        } else {
-            switchEngine(engine)
-        }
-
-        engineObservable.onEngineChanged(currentEngine)
-    }
-
-    private fun initializeEngine(engine: PlayerEngine) {
-        currentEngine = engine
-    }
-
     private fun switchEngine(engine: PlayerEngine) {
         if (currentEngine != engine) {
-
             currentEngine.perform(MediaAction.Stop)
             currentEngine = engine
+            engineObservable.onEngineChanged(currentEngine)
         }
     }
-
-    private fun isEngineNotInitialized(): Boolean = !(::currentEngine.isInitialized)
 }
