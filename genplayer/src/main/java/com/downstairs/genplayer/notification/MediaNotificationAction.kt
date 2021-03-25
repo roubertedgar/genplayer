@@ -14,10 +14,4 @@ enum class MediaNotificationAction(val icon: Int, val title: String, val filter:
     FORWARD(R.drawable.ic_forward_notification, "Forward", PLAYER_CONTROL_ACTION_FORWARD),
     REWIND(R.drawable.ic_backward_notification, "Rewind", PLAYER_CONTROL_ACTION_BACKWARD),
     STOP(R.drawable.ic_close_notification, "Close", PLAYER_CONTROL_ACTION_STOP);
-
-    companion object {
-        fun forEach(emmit: (MediaNotificationAction) -> Unit) {
-            values().forEach(emmit)
-        }
-    }
 }

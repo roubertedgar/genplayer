@@ -1,6 +1,6 @@
 package com.downstairs.genplayer.content
 
-data class MediaStatus(
+data class MediaState(
     val title: String = "",
     val description: String = "",
     val artworkUrl: String = "",

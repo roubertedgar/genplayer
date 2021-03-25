@@ -2,9 +2,9 @@ package com.downstairs.genplayer.injection
 
 import android.content.Context
 import android.support.v4.media.session.MediaSessionCompat
-import com.downstairs.genplayer.session.PlayerMediaSession
 import com.downstairs.genplayer.content.CustomHeaderMediaSourceFactory
-import com.downstairs.genplayer.notification.PlayerNotification
+import com.downstairs.genplayer.session.MediaSessionReceiver
+import com.downstairs.genplayer.session.PlayerMediaSession
 import com.downstairs.genplayer.tools.ArtworkLoader
 import com.google.android.exoplayer2.SimpleExoPlayer
 import dagger.Module
@@ -14,24 +14,18 @@ import javax.inject.Singleton
 @Module
 class PlayerModule {
 
-    companion object {
-        const val MEDIA_SESSION_TAG = "MediaSessionPlayerTag"
-    }
+    @Singleton
+    @Provides
+    fun providesMediaSessionCompat(context: Context) =
+        MediaSessionCompat(context, MEDIA_SESSION_TAG)
 
     @Singleton
     @Provides
     fun providesMediaSession(
-        context: Context,
-        playerNotification: PlayerNotification,
+        mediaSessionCompat: MediaSessionCompat,
+        mediaSessionReceiver: MediaSessionReceiver,
         artworkLoader: ArtworkLoader
-    ): PlayerMediaSession {
-        return PlayerMediaSession(
-            context,
-            MediaSessionCompat(context, MEDIA_SESSION_TAG),
-            playerNotification,
-            artworkLoader
-        )
-    }
+    ) = PlayerMediaSession(mediaSessionCompat, mediaSessionReceiver, artworkLoader)
 
     @Singleton
     @Provides
@@ -39,5 +33,9 @@ class PlayerModule {
         return SimpleExoPlayer.Builder(context)
             .setMediaSourceFactory(CustomHeaderMediaSourceFactory())
             .build()
+    }
+
+    companion object {
+        const val MEDIA_SESSION_TAG = "GenPlayerMediaSession"
     }
 }

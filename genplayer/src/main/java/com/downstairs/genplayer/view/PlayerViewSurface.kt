@@ -59,7 +59,7 @@ class PlayerViewSurface @JvmOverloads constructor(
     }
 
     private fun bindView(genPlayer: GenPlayer) {
-        genPlayer.addEngineListener(object : EngineObserver {
+        genPlayer.addEngineListener(object : EngineObserver() {
             override fun onEngineChanged(engine: PlayerEngine) {
                 playerViewController.setPlayer(engine.player)
                 surfaceView.setPlayer(engine)

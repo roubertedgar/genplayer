@@ -2,7 +2,7 @@ package com.downstairs.genplayer.engine
 
 import com.downstairs.genplayer.content.Content
 import com.downstairs.genplayer.content.MediaAction
-import com.downstairs.genplayer.content.MediaStatus
+import com.downstairs.genplayer.content.MediaState
 import com.google.android.exoplayer2.Player
 
 abstract class PlayerEngine {
@@ -61,9 +61,9 @@ abstract class PlayerEngine {
         player.seekTo(position)
     }
 
-    private fun currentMediaState(): MediaStatus {
+    private fun currentMediaState(): MediaState {
         return currentContent?.let { content ->
-            MediaStatus(
+            MediaState(
                 content.title,
                 content.description,
                 content.artworkUrl,
@@ -72,7 +72,7 @@ abstract class PlayerEngine {
                 player.playbackParameters.speed,
                 player.isPlaying
             )
-        } ?: MediaStatus()
+        } ?: MediaState()
     }
 
     fun isContentAlreadyPlaying(content: Content): Boolean {

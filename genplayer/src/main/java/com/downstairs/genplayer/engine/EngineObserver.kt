@@ -1,8 +1,8 @@
 package com.downstairs.genplayer.engine
 
-import com.downstairs.genplayer.content.MediaStatus
+import com.downstairs.genplayer.content.MediaState
 
-interface EngineObserver {
-    fun onEngineChanged(engine: PlayerEngine) {}
-    fun onStateChanged(mediaStatus: MediaStatus) {}
+abstract class EngineObserver {
+    open fun onEngineChanged(engine: PlayerEngine) {}
+    open fun onStateChanged(mediaState: MediaState) {}
 }

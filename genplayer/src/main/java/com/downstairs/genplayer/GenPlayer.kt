@@ -26,7 +26,7 @@ class GenPlayer @Inject constructor(private val engineManager: EngineManager) {
             engineManager.prepare(content)
         })
 
-        engineManager.observe(object : EngineObserver {
+        engineManager.observe(object : EngineObserver() {
             override fun onEngineChanged(engine: PlayerEngine) {
                 playList.current()
             }
