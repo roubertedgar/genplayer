@@ -31,12 +31,6 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private var player: Player? = null
 
-    companion object {
-        private const val MAX_PROGRESS_UPDATE_MS = 1000L
-        private const val DEFAULT_HIDE_DELAY_MS = 5000L
-        private const val DEFAULT_SEEK_TIME_MS = 15000L
-    }
-
     init {
         inflate(context, R.layout.player_controller_view, this)
 
@@ -78,6 +72,19 @@ class PlayerControllerView @JvmOverloads constructor(
         updateTimeline()
     }
 
+    fun disable() {
+        isClickable = false
+        isFocusable = false
+        playerTimeBar.hide()
+        hide()
+    }
+
+    fun enable() {
+        isClickable = true
+        isFocusable = true
+        show()
+    }
+
     private fun show() {
         if (!isVisible()) {
             showViews()
@@ -102,7 +109,11 @@ class PlayerControllerView @JvmOverloads constructor(
     private fun hideViews() {
         bottomBarContainer.isVisible = false
         buttonsContainer.isVisible = false
-        playerTimeBar.hide(isOnFullScreen())
+        playerTimeBar.hideScrubber()
+
+        if (isOnFullScreen()) {
+            playerTimeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
+        }
     }
 
     private fun hideAfterTimeout() {
@@ -212,6 +223,13 @@ class PlayerControllerView @JvmOverloads constructor(
     private fun cancelTimers() {
         hideTimer.cancel()
         progressTimer.cancel()
+    }
+
+    companion object {
+        private const val MAX_PROGRESS_UPDATE_MS = 1000L
+        private const val DEFAULT_HIDE_DELAY_MS = 5000L
+        private const val DEFAULT_SEEK_TIME_MS = 15000L
+        private const val SCRUBBER_ANIM_DURATION = 300L
     }
 
     inner class ComponentListener : Player.EventListener, OnScrubListener {

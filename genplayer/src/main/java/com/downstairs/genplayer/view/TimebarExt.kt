@@ -34,12 +34,8 @@ val DefaultTimeBar.barTopHeight: Float
         return touchHeight / 2 + barHeight
     }
 
-fun DefaultTimeBar.hide(hideAll: Boolean) {
-    if (hideAll) {
-        isVisible = false
-    }
-
-    hideScrubber(300L)
+fun DefaultTimeBar.hide() {
+    isVisible = false
 }
 
 fun DefaultTimeBar.show() {

@@ -58,6 +58,14 @@ class PlayerViewSurface @JvmOverloads constructor(
         }
     }
 
+    fun enableControls() {
+        playerViewController.enable()
+    }
+
+    fun disableControls() {
+        playerViewController.disable()
+    }
+
     private fun bindView(genPlayer: GenPlayer) {
         genPlayer.addEngineListener(object : EngineObserver() {
             override fun onEngineChanged(engine: PlayerEngine) {
