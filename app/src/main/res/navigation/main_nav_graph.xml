@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/anotherFragment">
+
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.downstairs.genplayer.VideoFragment"
+        android:label="VideoFragment"
+        tools:layout="@layout/video_fragment" />
+    <fragment
+        android:id="@+id/anotherFragment"
+        android:name="com.downstairs.genplayer.HomeFragment"
+        android:label="AnotherFragment" >
+        <action
+            android:id="@+id/fromHomeScreenToVideoScreen"
+            app:destination="@id/videoFragment" />
+    </fragment>
+</navigation>
