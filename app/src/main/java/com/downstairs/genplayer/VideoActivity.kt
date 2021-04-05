@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.video_activity.*
 
 class VideoActivity : AppCompatActivity(R.layout.video_activity) {
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onUserLeaveHint() {
         currentFragment?.also { fragment ->
@@ -19,7 +18,6 @@ class VideoActivity : AppCompatActivity(R.layout.video_activity) {
                 (fragment as? PictureInPictureFragment)?.wishEnterOnPipMode ?: false
 
             if (wishEnterOnPip) {
-                fragment.onPictureInPictureModeChanged(true)
                 enterPictureInPictureMode(PictureInPictureParams.Builder().build())
             }
         }
@@ -29,9 +27,7 @@ class VideoActivity : AppCompatActivity(R.layout.video_activity) {
         isInPictureInPictureMode: Boolean, newConfig: Configuration?
     ) {
         currentFragment?.also { fragment ->
-            if (!isInPictureInPictureMode) {
-                fragment.onPictureInPictureModeChanged(false)
-            }
+            fragment.onPictureInPictureModeChanged(isInPictureInPictureMode)
         }
     }
 }

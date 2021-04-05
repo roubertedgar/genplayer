@@ -34,8 +34,7 @@ class PlayerControllerView @JvmOverloads constructor(
     init {
         inflate(context, R.layout.player_controller_view, this)
 
-        isClickable = true
-        isFocusable = true
+        enable()
     }
 
     override fun onAttachedToWindow() {
@@ -82,7 +81,6 @@ class PlayerControllerView @JvmOverloads constructor(
     fun enable() {
         isClickable = true
         isFocusable = true
-        show()
     }
 
     private fun show() {
