@@ -36,12 +36,6 @@ class PlayerModule {
             .build()
     }
 
-    @Singleton
-    @Provides
-    fun providesPlayerServiceConnection(context: Context): PlayerServiceConnection {
-        return PlayerServiceConnection(context)
-    }
-
     companion object {
         const val MEDIA_SESSION_TAG = "GenPlayerMediaSession"
     }

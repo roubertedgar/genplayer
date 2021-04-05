@@ -8,16 +8,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.downstairs.genplayer.R
 import com.downstairs.genplayer.GenPlayer
+import com.downstairs.genplayer.R
 import com.downstairs.genplayer.content.Content
 import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.engine.PlayerEngine
-import com.downstairs.genplayer.injection.DaggerPlayerComponent
 import com.downstairs.genplayer.service.PlayerServiceConnection
 import com.downstairs.genplayer.tools.orientation.Orientation
 import kotlinx.android.synthetic.main.player_view_surface.view.*
-import javax.inject.Inject
 
 class PlayerViewSurface @JvmOverloads constructor(
     context: Context,
@@ -25,13 +23,9 @@ class PlayerViewSurface @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), LifecycleObserver {
 
-    @Inject
-    lateinit var serviceConnection: PlayerServiceConnection
-
     private var orientationListener: (Orientation) -> Unit = {}
 
     init {
-        DaggerPlayerComponent.factory().create(context).inject(this)
         inflate(context, R.layout.player_view_surface, this)
     }
 
@@ -57,7 +51,7 @@ class PlayerViewSurface @JvmOverloads constructor(
     }
 
     fun load(vararg content: Content) {
-        serviceConnection.connect { player ->
+        PlayerServiceConnection.connect(context) { player ->
             bindView(player)
             player.addContent(content[0])
         }
@@ -82,7 +76,7 @@ class PlayerViewSurface @JvmOverloads constructor(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
-        serviceConnection.disconnect()
+        PlayerServiceConnection.disconnect(context)
     }
 }
 

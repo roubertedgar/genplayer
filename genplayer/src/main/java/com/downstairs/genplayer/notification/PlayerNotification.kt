@@ -13,6 +13,9 @@ import androidx.core.app.NotificationCompat.Action
 import androidx.core.app.NotificationManagerCompat
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.session.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.media.app.NotificationCompat.MediaStyle as MediaStyle
 
@@ -107,13 +110,12 @@ class PlayerNotification @Inject constructor(private val context: Context) {
         }
     }
 
-    fun release() {
-        removeNotification()
-    }
-
-    private fun removeNotification() {
-        notificationManger.cancel(PLAYER_NOTIFICATION_ID)
-        notificationListener.onNotificationRemoved()
+    fun removeNotification() {
+        GlobalScope.launch {
+            delay(150)
+            notificationManger.cancel(PLAYER_NOTIFICATION_ID)
+            notificationListener.onNotificationRemoved()
+        }
     }
 }
 

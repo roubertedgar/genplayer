@@ -1,7 +1,6 @@
 package com.downstairs.genplayer.engine
 
 import com.downstairs.genplayer.content.Content
-import com.downstairs.genplayer.content.MediaAction
 import com.downstairs.genplayer.content.MediaState
 import com.google.android.exoplayer2.Player
 
@@ -26,39 +25,36 @@ abstract class PlayerEngine {
         this.observable = observable
     }
 
-    fun perform(action: MediaAction) {
-        when (action) {
-            is MediaAction.Play -> player.play()
-            is MediaAction.Pause -> player.pause()
-            is MediaAction.Forward -> forward()
-            is MediaAction.Rewind -> backward()
-            is MediaAction.SeekTo -> player.seekTo(action.position)
-            is MediaAction.Stop -> stop()
-        }
+    fun play() {
+        player.play()
     }
 
-    fun release() {
-        stop()
-        player.release()
+    fun pause() {
+        player.pause()
     }
 
-    private fun stop() {
-        player.removeListener(listener)
-        player.stop()
-    }
-
-    private fun forward() {
+    fun forward() {
         val targetPosition = player.currentPosition + 15000
         val position = if (targetPosition > player.duration) player.duration else targetPosition
 
         player.seekTo(position)
     }
 
-    private fun backward() {
+    fun rewind() {
         val targetPosition = player.currentPosition - 15000
         val position = if (targetPosition < 0) 0 else targetPosition
 
         player.seekTo(position)
+    }
+
+    fun seekTo(position: Long) {
+        player.seekTo(position)
+    }
+
+    fun release() {
+        player.stop()
+        player.removeListener(listener)
+        player.release()
     }
 
     private fun currentMediaState(): MediaState {

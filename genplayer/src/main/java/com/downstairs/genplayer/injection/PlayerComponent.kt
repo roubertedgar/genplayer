@@ -17,6 +17,4 @@ interface PlayerComponent {
     }
 
     fun inject(service: PlayerService)
-
-    fun inject(view: PlayerViewSurface)
 }

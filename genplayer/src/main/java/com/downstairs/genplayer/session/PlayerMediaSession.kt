@@ -36,6 +36,7 @@ class PlayerMediaSession @Inject constructor(
 
     fun release() {
         sessionCompat.release()
+        sessionReceiver.release()
     }
 
     private fun onArtworkLoaded(mediaState: MediaState, artwork: Bitmap) {

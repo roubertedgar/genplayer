@@ -8,27 +8,27 @@ import android.os.IBinder
 import androidx.core.content.ContextCompat
 import com.downstairs.genplayer.GenPlayer
 
-class PlayerServiceConnection constructor(private val context: Context) : ServiceConnection {
+object PlayerServiceConnection : ServiceConnection {
 
     private var onConnect: (GenPlayer) -> Unit = {}
     private var player: GenPlayer? = null
 
-    fun connect(onConnect: (GenPlayer) -> Unit) {
+    fun connect(context: Context, onConnect: (GenPlayer) -> Unit) {
         this.onConnect = onConnect
 
-        if (isConnected()) player?.also(onConnect) else bindService()
+        if (isConnected()) player?.also(onConnect) else bindService(context)
     }
 
-    fun disconnect() {
+    fun disconnect(context: Context) {
         context.unbindService(this)
         player = null
     }
 
-    fun toForeground() {
+    fun toForeground(context: Context) {
         ContextCompat.startForegroundService(context, getServiceIntent(context))
     }
 
-    private fun bindService() {
+    private fun bindService(context: Context) {
         context.startService(getServiceIntent(context))
         context.bindService(getServiceIntent(context), this, Context.BIND_AUTO_CREATE)
     }
@@ -47,5 +47,5 @@ class PlayerServiceConnection constructor(private val context: Context) : Servic
         player = null
     }
 
-    private fun isConnected() = player != null
+    fun isConnected() = player != null
 }

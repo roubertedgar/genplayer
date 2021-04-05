@@ -17,7 +17,6 @@ import javax.inject.Inject
 
 class PlayerService : Service() {
 
-    @Inject lateinit var serviceConnection:PlayerServiceConnection
     @Inject lateinit var mediaSession: PlayerMediaSession
     @Inject lateinit var notification: PlayerNotification
     @Inject lateinit var genPlayer: GenPlayer
@@ -30,7 +29,14 @@ class PlayerService : Service() {
     }
 
     private fun setupListeners() {
-        mediaSession.onMediaActionReceived { onMediaAction(it) }
+
+        genPlayer.addEngineListener(object : EngineObserver() {
+            override fun onStateChanged(mediaState: MediaState) {
+                mediaSession.updateSession(mediaState)
+            }
+        })
+
+        mediaSession.onMediaActionReceived { performAction(it) }
 
         notification.setNotificationListener(object : NotificationListener {
             override fun onNotificationPosted(notificationId: Int, notification: Notification) {
@@ -41,20 +47,16 @@ class PlayerService : Service() {
                 stopForeground(true)
             }
         })
-
-        genPlayer.addEngineListener(object : EngineObserver() {
-            override fun onStateChanged(mediaState: MediaState) {
-                mediaSession.updateSession(mediaState)
-            }
-        })
     }
 
-    private fun onMediaAction(action: MediaAction) {
-        genPlayer.performAction(action)
-
-        if (action == MediaAction.Stop) {
-            mediaSession.release()
-            notification.release()
+    private fun performAction(action: MediaAction) {
+        when (action) {
+            is MediaAction.Play -> genPlayer.play()
+            is MediaAction.Pause -> genPlayer.pause()
+            is MediaAction.Forward -> genPlayer.forward()
+            is MediaAction.Rewind -> genPlayer.rewind()
+            is MediaAction.SeekTo -> genPlayer.seekTo(action.position)
+            else -> stopService()
         }
     }
 
@@ -66,11 +68,22 @@ class PlayerService : Service() {
         return PLayerServiceBinder()
     }
 
+    private fun stopService() {
+        if (PlayerServiceConnection.isConnected()) {
+            genPlayer.pause()
+        } else {
+            genPlayer.release()
+            mediaSession.release()
+            stopSelf()
+        }
+
+        notification.removeNotification()
+    }
+
     inner class PLayerServiceBinder : Binder() {
         fun getPlayer(): GenPlayer {
             return genPlayer
         }
     }
 }
-
 
