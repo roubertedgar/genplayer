@@ -8,7 +8,7 @@ import android.os.IBinder
 import androidx.core.content.ContextCompat
 import com.downstairs.genplayer.GenPlayer
 
-class PlayerServiceConnection(private val context: Context) : ServiceConnection {
+class PlayerServiceConnection constructor(private val context: Context) : ServiceConnection {
 
     private var onConnect: (GenPlayer) -> Unit = {}
     private var player: GenPlayer? = null
@@ -21,10 +21,15 @@ class PlayerServiceConnection(private val context: Context) : ServiceConnection 
 
     fun disconnect() {
         context.unbindService(this)
+        player = null
+    }
+
+    fun toForeground() {
+        ContextCompat.startForegroundService(context, getServiceIntent(context))
     }
 
     private fun bindService() {
-        ContextCompat.startForegroundService(context, getServiceIntent(context))
+        context.startService(getServiceIntent(context))
         context.bindService(getServiceIntent(context), this, Context.BIND_AUTO_CREATE)
     }
 

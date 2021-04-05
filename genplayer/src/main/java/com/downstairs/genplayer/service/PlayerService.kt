@@ -17,20 +17,15 @@ import javax.inject.Inject
 
 class PlayerService : Service() {
 
-    @Inject
-    lateinit var mediaSession: PlayerMediaSession
-
-    @Inject
-    lateinit var notification: PlayerNotification
-
-    @Inject
-    lateinit var genPlayer: GenPlayer
+    @Inject lateinit var serviceConnection:PlayerServiceConnection
+    @Inject lateinit var mediaSession: PlayerMediaSession
+    @Inject lateinit var notification: PlayerNotification
+    @Inject lateinit var genPlayer: GenPlayer
 
     override fun onCreate() {
         DaggerPlayerComponent.factory().create(baseContext).inject(this)
 
         notification.setMediaSession(mediaSession)
-
         setupListeners()
     }
 

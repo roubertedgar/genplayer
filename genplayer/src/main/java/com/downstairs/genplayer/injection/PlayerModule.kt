@@ -3,6 +3,7 @@ package com.downstairs.genplayer.injection
 import android.content.Context
 import android.support.v4.media.session.MediaSessionCompat
 import com.downstairs.genplayer.content.CustomHeaderMediaSourceFactory
+import com.downstairs.genplayer.service.PlayerServiceConnection
 import com.downstairs.genplayer.session.MediaSessionReceiver
 import com.downstairs.genplayer.session.PlayerMediaSession
 import com.downstairs.genplayer.tools.ArtworkLoader
@@ -33,6 +34,12 @@ class PlayerModule {
         return SimpleExoPlayer.Builder(context)
             .setMediaSourceFactory(CustomHeaderMediaSourceFactory())
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun providesPlayerServiceConnection(context: Context): PlayerServiceConnection {
+        return PlayerServiceConnection(context)
     }
 
     companion object {
