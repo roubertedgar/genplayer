@@ -5,43 +5,35 @@ import android.app.Dialog
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.view.View
-import android.view.ViewGroup
 import com.downstairs.genplayer.R
-import kotlinx.android.synthetic.main.full_screen_player_dialog.playerViewFullScreenContainer
+import kotlinx.android.synthetic.main.full_screen_player_dialog.playerViewContainer
 import kotlinx.android.synthetic.main.player_view_surface.*
+import kotlinx.android.synthetic.main.player_view_surface.view.*
 
 class FullScreenDialog(context: Context) :
     Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
 
-    private var playerViewSurface: PlayerViewSurface? = null
+    private var playerViewSurface: View? = null
 
     init {
         setContentView(R.layout.full_screen_player_dialog)
-
-        (context as? Activity)?.also {
-            setOwnerActivity(it)
-        }
+        (context as? Activity)?.also { setOwnerActivity(it) }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
         toFullScreen()
 
-        playerViewSurface?.removeParent()
+        playerViewSurface?.also { playerView ->
+            playerView.removeParent()
 
-        playerViewFullScreenContainer.addView(
-            playerViewSurface,
-            ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        )
-
-        playerViewController?.toFullScreenMode()
+            playerView.surfaceView.setVerticalBias(0.5f)
+            playerViewContainer.addView(playerView)
+            playerView.playerViewController.toFullScreenMode()
+        }
     }
 
-    fun show(playerViewSurface: PlayerViewSurface) {
+    fun show(playerViewSurface: View) {
         if (ownerActivity == null) return
 
         this.playerViewSurface = playerViewSurface
@@ -75,14 +67,14 @@ class FullScreenDialog(context: Context) :
             (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_VISIBLE)
 
         playerViewController?.toPortraitMode()
-        playerViewSurface?.removeParent()
+
+        playerViewSurface?.apply {
+            surfaceView.setVerticalBias(0f)
+            removeParent()
+        }
     }
 
     override fun onBackPressed() {
         playerViewController?.toPortraitMode()
     }
-}
-
-fun View.removeParent() {
-    (parent as ViewGroup).removeView(this)
 }

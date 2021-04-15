@@ -3,6 +3,7 @@ package com.downstairs.genplayer
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.downstairs.genplayer.content.Content
 import com.downstairs.genplayer.content.HLSContentFactory
 import kotlinx.android.synthetic.main.video_fragment.*
 
@@ -22,10 +23,14 @@ class VideoFragment : Fragment(R.layout.video_fragment), PictureInPictureFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         playerView.setLifecycleOwner(this)
         playerView.load(
-            HLSContentFactory.createContent(
+            Content(
                 "Eita nois",
-                "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-                mapOf()
+                "Fodasse",
+                "https://storage.googleapis.com/wvmedia/clear/h264/tears/tears.mpd",
+                "",
+                "application/dash+xml",
+                emptyMap(),
+                0
             )
         )
     }

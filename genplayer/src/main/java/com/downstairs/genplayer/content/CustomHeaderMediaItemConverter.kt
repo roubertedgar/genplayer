@@ -35,6 +35,7 @@ class CustomHeaderMediaItemConverter : MediaItemConverter {
     private fun createCastMetadata(mediaItem: MediaItem): CastMetadata {
         return CastMetadata(CastMetadata.MEDIA_TYPE_MOVIE).apply {
             putString(KEY_TITLE, mediaItem.getProperty(MediaProperty.TITLE, ""))
+            //botar drm aqui?
         }
     }
 

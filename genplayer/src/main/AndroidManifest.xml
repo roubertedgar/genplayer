@@ -3,6 +3,7 @@
     package="com.downstairs.genplayer">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application>
         <service android:name="com.downstairs.genplayer.service.PlayerService" />
@@ -10,9 +11,6 @@
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.downstairs.genplayer.CastOptionsProvider" />
-
-
-        <receiver android:name="com.downstairs.genplayer.notification.MediaActionReceiver" />
     </application>
 
 </manifest>

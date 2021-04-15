@@ -23,7 +23,7 @@ class PlayerViewSurface @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), LifecycleObserver {
 
-    private var orientationListener: (Orientation) -> Unit = {}
+    private val fullScreenDialog: FullScreenDialog = FullScreenDialog(context)
 
     init {
         inflate(context, R.layout.player_view_surface, this)
@@ -31,19 +31,25 @@ class PlayerViewSurface @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
         setupListeners()
     }
 
     private fun setupListeners() {
         playerViewController.setListener(object : ControllerListener {
             override fun onOrientationRequested(orientation: Orientation) {
-                orientationListener(orientation)
+                this@PlayerViewSurface.onOrientationChanged(orientation)
             }
         })
     }
 
-    fun setOrientationListener(onChange: (Orientation) -> Unit) {
-        this.orientationListener = onChange
+    private fun onOrientationChanged(orientation: Orientation) {
+        if (orientation == Orientation.LANDSCAPE) {
+            fullScreenDialog.show(playerViewContainer)
+        } else {
+            fullScreenDialog.dismiss()
+            addView(playerViewContainer)
+        }
     }
 
     fun setLifecycleOwner(lifecycleOwner: LifecycleOwner) {
@@ -70,6 +76,9 @@ class PlayerViewSurface @JvmOverloads constructor(
             override fun onEngineChanged(engine: PlayerEngine) {
                 playerViewController.setPlayer(engine.player)
                 surfaceView.setPlayer(engine)
+                surfaceView.setAspectRatioListener { targetAspectRatio, naturalAspectRatio, aspectRatioMismatch ->
+                    print("$targetAspectRatio, $naturalAspectRatio, $aspectRatioMismatch")
+                }
             }
         })
     }

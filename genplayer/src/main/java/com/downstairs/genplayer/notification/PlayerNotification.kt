@@ -47,13 +47,15 @@ class PlayerNotification @Inject constructor(private val context: Context) {
 
     private fun postNotification(mediaSession: MediaSessionCompat) {
         val notification = NotificationCompat.Builder(context, PLAYER_CHANNEL_ID)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setSmallIcon(R.drawable.ic_play_notification)
             .setContentTitle(mediaSession.title)
             .setContentText(mediaSession.content)
             .setLargeIcon(mediaSession.artwork)
             .setStyle(createMediaStyle(mediaSession.sessionToken))
             .setActions(createNotificationActions(mediaSession.state))
+            .setAutoCancel(true)
+            .setOngoing(false)
             .build()
 
         postNotification(notification)

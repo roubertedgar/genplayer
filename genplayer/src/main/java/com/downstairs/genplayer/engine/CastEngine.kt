@@ -13,6 +13,8 @@ class CastEngine @Inject constructor(context: Context) : PlayerEngine() {
     private val mediaItemConverter = CustomHeaderMediaItemConverter()
     override val player = CastPlayer(castContext, mediaItemConverter)
 
+
+
     override val currentContent: Content?
         get() = castContext.currentItem?.let {
             mediaItemConverter.toMediaItem(it).toContent(player.currentPosition)

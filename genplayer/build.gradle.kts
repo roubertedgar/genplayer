@@ -44,6 +44,7 @@ dependencies {
     implementation(Dependencies.ExoPlayer.core)
     implementation(Dependencies.ExoPlayer.ui)
     implementation(Dependencies.ExoPlayer.hls)
+    implementation(Dependencies.ExoPlayer.dash)
     implementation(Dependencies.ExoPlayer.okhttp)
     implementation(Dependencies.ExoPlayer.mediaSession)
     implementation(Dependencies.ExoPlayer.cast)

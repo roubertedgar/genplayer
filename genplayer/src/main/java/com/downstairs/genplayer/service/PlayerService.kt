@@ -52,7 +52,10 @@ class PlayerService : Service() {
     private fun performAction(action: MediaAction) {
         when (action) {
             is MediaAction.Play -> genPlayer.play()
-            is MediaAction.Pause -> genPlayer.pause()
+            is MediaAction.Pause -> {
+                genPlayer.pause()
+                stopForeground(false)
+            }
             is MediaAction.Forward -> genPlayer.forward()
             is MediaAction.Rewind -> genPlayer.rewind()
             is MediaAction.SeekTo -> genPlayer.seekTo(action.position)

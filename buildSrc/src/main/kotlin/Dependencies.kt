@@ -14,17 +14,13 @@ object Dependencies {
         const val activity = "androidx.activity:activity-ktx:1.1.0"
         const val fragment = "androidx.fragment:fragment-ktx:1.2.4"
 
-        const val lifecycleLiveData =
-            "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
-        const val lifecycleExtensions =
-            "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
-        const val lifecycleViewModel =
-            "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+        const val lifecycleLiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+        const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
+        const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
 
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:1.1.3"
 
-        const val navigationFragment =
-            "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+        const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
         const val navigationUI = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
     }
 
@@ -33,9 +29,9 @@ object Dependencies {
         const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
     }
 
-    object Auth{
-        const val firebaseAuth= "com.google.firebase:firebase-auth-ktx:19.3.2"
-        const val playServicesAuth =  "com.google.android.gms:play-services-auth:18.1.0"
+    object Auth {
+        const val firebaseAuth = "com.google.firebase:firebase-auth-ktx:19.3.2"
+        const val playServicesAuth = "com.google.android.gms:play-services-auth:18.1.0"
     }
 
     const val materialDesign = "com.google.android.material:material:1.1.0"
@@ -70,9 +66,10 @@ object Dependencies {
     }
 
     object ExoPlayer {
-        const val castLib= "com.google.android.gms:play-services-cast-framework:19.0.0"
+        const val castLib = "com.google.android.gms:play-services-cast-framework:19.0.0"
         const val core = "com.google.android.exoplayer:exoplayer-core:${Versions.exoplayer}"
         const val hls = "com.google.android.exoplayer:exoplayer-hls:${Versions.exoplayer}"
+        const val dash = "com.google.android.exoplayer:exoplayer-dash:${Versions.exoplayer}"
         const val ui = "com.google.android.exoplayer:exoplayer-ui:${Versions.exoplayer}"
         const val okhttp = "com.google.android.exoplayer:extension-okhttp:${Versions.exoplayer}"
         const val mediaSession = "com.google.android.exoplayer:extension-mediasession:${Versions.exoplayer}"
