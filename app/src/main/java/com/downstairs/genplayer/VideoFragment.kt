@@ -4,48 +4,68 @@ import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.downstairs.genplayer.content.Content
-import com.downstairs.genplayer.view.setVerticalBias
 import kotlinx.android.synthetic.main.video_fragment.*
-
 
 class VideoFragment : Fragment(R.layout.video_fragment), PictureInPictureFragment {
 
     override val wishEnterOnPipMode: Boolean
         get() = true
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupViews()
+        setupListeners()
+
+        playerView.setLifecycleOwner(this)
+
+        getMediaListAdapter()?.submitList(
+            listOf(
+                Content(
+                    "Eita nois",
+                    "Fodasse",
+                    "https://storage.googleapis.com/wvmedia/clear/h264/tears/tears.mpd",
+                    "",
+                    "application/dash+xml",
+                    emptyMap(),
+                    0
+                )
+            )
+        )
+    }
+
+    private fun setupViews() {
+        mediaList.adapter = MediaListAdapter()
+        mediaList.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun setupListeners() {
+        getMediaListAdapter()?.setOnItemClickListener {
+            playerView.load(it)
+        }
+    }
+
+    private fun getMediaListAdapter(): MediaListAdapter? {
+        return mediaList.adapter as? MediaListAdapter
+    }
+
     override fun enterOnPictureInPicture() {
-        startBackgroundTransition()
-        playerView.setVerticalBias(0.5f)
         playerView.enterOnPictureInPictureMode()
+        rootMotionLayout.transitionToEnd()
+        startBackgroundTransition()
     }
 
     override fun exitFromPictureInPicture() {
-        reverseBackgroundTransition()
-        playerView.setVerticalBias(0f)
         playerView.exitFromPictureInPictureMode()
+        rootMotionLayout.transitionToStart()
+        reverseBackgroundTransition()
     }
 
     private fun startBackgroundTransition() {
-        (view?.background as? TransitionDrawable)?.startTransition(200)
+        (view?.background as? TransitionDrawable)?.startTransition(300)
     }
 
     private fun reverseBackgroundTransition() {
         (view?.background as? TransitionDrawable)?.reverseTransition(300)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        playerView.setLifecycleOwner(this)
-        playerView.load(
-            Content(
-                "Eita nois",
-                "Fodasse",
-                "https://storage.googleapis.com/wvmedia/clear/h264/tears/tears.mpd",
-                "",
-                "application/dash+xml",
-                emptyMap(),
-                0
-            )
-        )
     }
 }

@@ -31,7 +31,6 @@ dependencies {
     implementation(Dependencies.materialDesign)
 
     implementation(Dependencies.Androidx.constraintLayout)
-
     implementation(Dependencies.Androidx.activity)
     implementation(Dependencies.Androidx.fragment)
 

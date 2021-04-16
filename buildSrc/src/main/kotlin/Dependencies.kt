@@ -18,7 +18,7 @@ object Dependencies {
         const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
         const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
 
-        const val constraintLayout = "androidx.constraintlayout:constraintlayout:1.1.3"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
 
         const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
         const val navigationUI = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
@@ -91,7 +91,7 @@ object Plugins {
 }
 
 object Path {
-    const val androidGradle = "com.android.tools.build:gradle:4.0.0"
+    const val androidGradle = "com.android.tools.build:gradle:4.1.3"
     const val playServices = "com.google.gms:google-services:4.3.3"
     const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
 }
