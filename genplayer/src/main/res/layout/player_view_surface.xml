@@ -39,7 +39,6 @@
             android:layout_height="@dimen/timeline_touch_height"
             app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/surfaceView" />
 

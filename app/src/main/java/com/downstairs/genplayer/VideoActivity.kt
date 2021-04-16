@@ -11,23 +11,32 @@ import kotlinx.android.synthetic.main.video_activity.*
 
 class VideoActivity : AppCompatActivity(R.layout.video_activity) {
 
+    private val pictureInPictureFragment: PictureInPictureFragment?
+        get() = currentFragment as? PictureInPictureFragment
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onUserLeaveHint() {
-        currentFragment?.also { fragment ->
-            val wishEnterOnPip =
-                (fragment as? PictureInPictureFragment)?.wishEnterOnPipMode ?: false
+        pictureInPictureFragment?.also { enterOnPictureInPictureMode(it) }
+    }
 
-            if (wishEnterOnPip) {
-                enterPictureInPictureMode(PictureInPictureParams.Builder().build())
-            }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun enterOnPictureInPictureMode(fragment: PictureInPictureFragment) {
+        if (fragment.wishEnterOnPipMode) {
+            fragment.enterOnPictureInPicture()
+
+            enterPictureInPictureMode(
+                PictureInPictureParams.Builder().build()
+            )
         }
     }
 
     override fun onPictureInPictureModeChanged(
-        isInPictureInPictureMode: Boolean, newConfig: Configuration?
+        isOnPictureInPicture: Boolean, config: Configuration?
     ) {
-        currentFragment?.also { fragment ->
-            fragment.onPictureInPictureModeChanged(isInPictureInPictureMode)
+        if (isOnPictureInPicture) {
+            pictureInPictureFragment?.enterOnPictureInPicture()
+        } else {
+            pictureInPictureFragment?.exitFromPictureInPicture()
         }
     }
 }

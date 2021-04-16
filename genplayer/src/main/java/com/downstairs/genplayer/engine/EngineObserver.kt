@@ -5,4 +5,5 @@ import com.downstairs.genplayer.content.MediaState
 abstract class EngineObserver {
     open fun onEngineChanged(engine: PlayerEngine) {}
     open fun onStateChanged(mediaState: MediaState) {}
+    open fun onVideoSizeChanged(width: Int, height: Int) {}
 }

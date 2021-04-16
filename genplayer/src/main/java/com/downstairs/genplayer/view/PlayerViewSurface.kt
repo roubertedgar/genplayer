@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.widget.FrameLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -63,12 +64,14 @@ class PlayerViewSurface @JvmOverloads constructor(
         }
     }
 
-    fun enableControls() {
-        playerViewController.enable()
+    fun enterOnPictureInPictureMode() {
+        timelinePlaceholder.isVisible = false
+        playerViewController.disable()
     }
 
-    fun disableControls() {
-        playerViewController.disable()
+    fun exitFromPictureInPictureMode() {
+        timelinePlaceholder.isVisible = true
+        playerViewController.enable()
     }
 
     private fun bindView(genPlayer: GenPlayer) {
@@ -76,9 +79,6 @@ class PlayerViewSurface @JvmOverloads constructor(
             override fun onEngineChanged(engine: PlayerEngine) {
                 playerViewController.setPlayer(engine.player)
                 surfaceView.setPlayer(engine)
-                surfaceView.setAspectRatioListener { targetAspectRatio, naturalAspectRatio, aspectRatioMismatch ->
-                    print("$targetAspectRatio, $naturalAspectRatio, $aspectRatioMismatch")
-                }
             }
         })
     }
