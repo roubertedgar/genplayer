@@ -14,14 +14,6 @@ class VideoFragment : Fragment(R.layout.video_fragment), PictureInPictureFragmen
     override val wishEnterOnPipMode: Boolean
         get() = true
 
-    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
-        if (isInPictureInPictureMode) {
-            enterOnPictureInPicture()
-        } else {
-            exitFromPictureInPicture()
-        }
-    }
-
     override fun enterOnPictureInPicture() {
         startBackgroundTransition()
         playerView.setVerticalBias(0.5f)
