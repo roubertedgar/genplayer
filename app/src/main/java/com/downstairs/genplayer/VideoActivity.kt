@@ -33,9 +33,7 @@ class VideoActivity : AppCompatActivity(R.layout.video_activity) {
     override fun onPictureInPictureModeChanged(
         isOnPictureInPicture: Boolean, config: Configuration?
     ) {
-        if (isOnPictureInPicture) {
-            pictureInPictureFragment?.enterOnPictureInPicture()
-        } else {
+        if (!isOnPictureInPicture) {
             pictureInPictureFragment?.exitFromPictureInPicture()
         }
     }
