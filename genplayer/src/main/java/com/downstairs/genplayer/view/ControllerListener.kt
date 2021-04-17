@@ -8,7 +8,5 @@ interface ControllerListener {
 
     fun onShow() {}
 
-    fun onOrientationRequested(orientation: Orientation) {}
-
     fun onOrientationChanged(orientation: Orientation) {}
 }

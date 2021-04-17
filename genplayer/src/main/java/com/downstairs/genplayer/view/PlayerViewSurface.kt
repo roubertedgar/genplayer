@@ -32,25 +32,7 @@ class PlayerViewSurface @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
         setupListeners()
-    }
-
-    private fun setupListeners() {
-        playerViewController.setListener(object : ControllerListener {
-            override fun onOrientationRequested(orientation: Orientation) {
-                this@PlayerViewSurface.onOrientationChanged(orientation)
-            }
-        })
-    }
-
-    private fun onOrientationChanged(orientation: Orientation) {
-        if (orientation == Orientation.LANDSCAPE) {
-            fullScreenDialog.show(playerViewContainer)
-        } else {
-            fullScreenDialog.dismiss()
-            addView(playerViewContainer)
-        }
     }
 
     fun setLifecycleOwner(lifecycleOwner: LifecycleOwner) {
@@ -64,8 +46,26 @@ class PlayerViewSurface @JvmOverloads constructor(
         }
     }
 
+    private fun setupListeners() {
+        playerViewController.setListener(object : ControllerListener {
+            override fun onOrientationChanged(orientation: Orientation) {
+                this@PlayerViewSurface.onOrientationChanged(orientation)
+            }
+        })
+    }
+
+    private fun onOrientationChanged(orientation: Orientation) {
+        if (orientation == Orientation.LANDSCAPE && !fullScreenDialog.isShowing) {
+            fullScreenDialog.show(playerViewContainer)
+        } else if (fullScreenDialog.isShowing) {
+            fullScreenDialog.dismiss()
+            addView(playerViewContainer)
+        }
+    }
+
     fun enterOnPictureInPictureMode() {
         timelinePlaceholder.isVisible = false
+        playerViewController.toPortraitMode()
         playerViewController.disable()
     }
 

@@ -29,7 +29,6 @@ class FullScreenDialog(context: Context) :
 
             playerView.surfaceView.setVerticalBias(0.5f)
             playerViewContainer.addView(playerView)
-            playerView.playerViewController.toFullScreenMode()
         }
     }
 
@@ -63,8 +62,6 @@ class FullScreenDialog(context: Context) :
         ownerActivity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         window?.decorView?.systemUiVisibility =
             (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_VISIBLE)
-
-        playerViewController?.toPortraitMode()
 
         playerViewSurface?.apply {
             surfaceView.setVerticalBias(0f)

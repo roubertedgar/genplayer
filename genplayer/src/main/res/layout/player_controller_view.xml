@@ -28,8 +28,8 @@
                 android:layout_marginTop="@dimen/tiny"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="@dimen/tiny"
-                app:drawable_final="@drawable/exo_ic_fullscreen_enter"
-                app:drawable_initial="@drawable/exo_ic_fullscreen_exit"
+                app:drawable_final="@drawable/exo_ic_fullscreen_exit"
+                app:drawable_initial="@drawable/exo_ic_fullscreen_enter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

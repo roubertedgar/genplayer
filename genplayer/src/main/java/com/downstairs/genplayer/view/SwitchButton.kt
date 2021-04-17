@@ -8,7 +8,6 @@ import androidx.annotation.StyleableRes
 import androidx.appcompat.widget.AppCompatImageButton
 import com.downstairs.genplayer.R
 
-
 class SwitchButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -28,11 +27,10 @@ class SwitchButton @JvmOverloads constructor(
 
     var state: State = State.INITIAL
         set(value) {
-            if (field == value) return
-
-            field = value
-            chooseAnimatedDrawable()
-            startAnimation()
+            if (field != value) {
+                field = value
+                onSwitchStateChanged()
+            }
         }
 
     init {
@@ -46,28 +44,32 @@ class SwitchButton @JvmOverloads constructor(
     }
 
     override fun performClick(): Boolean {
-        switchState()
+        toggleState()
         return super.performClick()
     }
 
-    private fun switchState() {
+    private fun toggleState() {
         val state = if (state == State.INITIAL) State.FINAL else State.INITIAL
         this.state = state
-
-        onSwitch(state)
     }
 
-    private fun startAnimation() {
-        val animatedVector = (drawable as? AnimatedVectorDrawable)
-        animatedVector?.start()
+    private fun onSwitchStateChanged() {
+        onSwitch(state)
+        chooseAnimatedDrawable()
+        startAnimation()
     }
 
     private fun chooseAnimatedDrawable() {
-        val drawable = if (state == State.INITIAL) initialAnimatedDrawable else finalAnimatedDrawable
+        val drawable =
+            if (state == State.INITIAL) initialAnimatedDrawable else finalAnimatedDrawable
 
         if (drawable != this.drawable) {
             setImageDrawable(drawable)
         }
+    }
+
+    private fun startAnimation() {
+        (drawable as? AnimatedVectorDrawable)?.start()
     }
 
     private fun getDrawable(@StyleableRes id: Int, defaultValue: Drawable? = null): Drawable? {

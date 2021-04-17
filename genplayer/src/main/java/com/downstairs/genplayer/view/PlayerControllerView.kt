@@ -33,8 +33,6 @@ class PlayerControllerView @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.player_controller_view, this)
-
-        enable()
     }
 
     override fun onAttachedToWindow() {
@@ -48,16 +46,6 @@ class PlayerControllerView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         cancelTimers()
         super.onDetachedFromWindow()
-    }
-
-    override fun performClick(): Boolean {
-        if (buttonsContainer.isVisible) {
-            hide()
-        } else {
-            show()
-        }
-
-        return super.performClick()
     }
 
     fun setListener(listener: ControllerListener) {
@@ -110,7 +98,7 @@ class PlayerControllerView @JvmOverloads constructor(
         playerTimeBar.hideScrubber()
 
         if (isOnFullScreen()) {
-            playerTimeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
+            playerTimeBar.hide()
         }
     }
 
@@ -127,13 +115,13 @@ class PlayerControllerView @JvmOverloads constructor(
         fullScreenButton.setOnSwitchListener { onSwitchFullScreen(it) }
 
         playerTimeBar.addListener(componentListener)
-    }
 
-    private fun setupViewOrientation() {
-        if (isOnFullScreen()) {
-            toFullScreenMode()
-        } else {
-            toPortraitMode()
+        controllerContainer.setOnClickListener {
+            if (buttonsContainer.isVisible) {
+                hide()
+            } else {
+                show()
+            }
         }
     }
 
@@ -171,7 +159,7 @@ class PlayerControllerView @JvmOverloads constructor(
         }
     }
 
-    private fun updatePlayerButton(isPlaying: Boolean) {
+    private fun updatePlayButton(isPlaying: Boolean) {
         if (isPlaying) {
             playPauseButton.state = SwitchButton.State.FINAL
         } else {
@@ -189,20 +177,36 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun onSwitchFullScreen(state: SwitchButton.State) {
         if (state == SwitchButton.State.INITIAL) {
-            listener.onOrientationRequested(Orientation.PORTRAIT)
+            listener.onOrientationChanged(Orientation.PORTRAIT)
+            switchToPortrait()
         } else {
-            listener.onOrientationRequested(Orientation.LANDSCAPE)
+            listener.onOrientationChanged(Orientation.LANDSCAPE)
+            switchToFullScreen()
         }
     }
 
+    private fun setupViewOrientation() {
+        if (isOnFullScreen()) {
+            switchToFullScreen()
+        } else {
+            switchToPortrait()
+        }
+    }
+
+    fun toPortraitMode() {
+        fullScreenButton.state = SwitchButton.State.INITIAL
+    }
+
     fun toFullScreenMode() {
-        listener.onOrientationChanged(Orientation.LANDSCAPE)
+        fullScreenButton.state = SwitchButton.State.FINAL
+    }
+
+    private fun switchToFullScreen() {
         playerTimeBar.toFullScreenConstraints()
         buttonsContainer.setBottomMargin(0f)
     }
 
-    fun toPortraitMode() {
-        listener.onOrientationChanged(Orientation.PORTRAIT)
+    private fun switchToPortrait() {
         playerTimeBar.toPortraitConstraints()
         buttonsContainer.setBottomMargin(playerTimeBar.barTopHeight)
     }
@@ -234,7 +238,7 @@ class PlayerControllerView @JvmOverloads constructor(
 
         //player
         override fun onIsPlayingChanged(isPlaying: Boolean) {
-            updatePlayerButton(isPlaying)
+            updatePlayButton(isPlaying)
         }
 
         override fun onTimelineChanged(timeline: Timeline, reason: Int) {
