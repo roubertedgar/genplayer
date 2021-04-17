@@ -95,7 +95,7 @@ class PlayerControllerView @JvmOverloads constructor(
     private fun hideViews() {
         bottomBarContainer.isVisible = false
         buttonsContainer.isVisible = false
-        playerTimeBar.hideScrubber()
+        playerTimeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
 
         if (isOnFullScreen()) {
             playerTimeBar.hide()
