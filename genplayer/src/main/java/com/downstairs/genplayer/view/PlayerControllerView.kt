@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.ui.TimeBar.OnScrubListener
 import kotlinx.android.synthetic.main.player_controller_view.view.*
+import kotlinx.android.synthetic.main.player_main_control_buttons_layout.view.*
 
 class PlayerControllerView @JvmOverloads constructor(
     context: Context,
@@ -43,11 +44,6 @@ class PlayerControllerView @JvmOverloads constructor(
         initTimers()
     }
 
-    override fun onDetachedFromWindow() {
-        cancelTimers()
-        super.onDetachedFromWindow()
-    }
-
     fun setListener(listener: ControllerListener) {
         this.listener = listener
     }
@@ -59,78 +55,45 @@ class PlayerControllerView @JvmOverloads constructor(
         updateTimeline()
     }
 
+    fun toPortraitMode() {
+        fullScreenButton.state = SwitchButton.State.INITIAL
+    }
+
+    fun toFullScreenMode() {
+        fullScreenButton.state = SwitchButton.State.FINAL
+    }
+
     fun disable() {
-        isClickable = false
-        isFocusable = false
-        playerTimeBar.hide()
-        hide()
+        isVisible = false
     }
 
     fun enable() {
-        isClickable = true
-        isFocusable = true
-    }
-
-    private fun show() {
-        if (!isVisible()) {
-            showViews()
-        }
-
-        hideAfterTimeout()
-    }
-
-    private fun hide() {
-        if (isVisible()) {
-            hideViews()
-            hideTimer.cancel()
-        }
-    }
-
-    private fun showViews() {
-        bottomBarContainer.isVisible = true
-        buttonsContainer.isVisible = true
-        playerTimeBar.show()
-    }
-
-    private fun hideViews() {
-        bottomBarContainer.isVisible = false
-        buttonsContainer.isVisible = false
-        playerTimeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
-
-        if (isOnFullScreen()) {
-            playerTimeBar.hide()
-        }
-    }
-
-    private fun hideAfterTimeout() {
-        if (isAttachedToWindow) {
-            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS, this::hide)
-        }
+        isVisible = true
     }
 
     private fun setupListeners() {
-        rewindButton.setOnClickListener { rewind() }
-        fastForwardButton.setOnClickListener { seek() }
-        playPauseButton.setOnSwitchListener { onSwitchPlayPause(it) }
+        fastForwardButton.setOnClickListener { safeSeek(+DEFAULT_SEEK_TIME_MS) }
+        rewindButton.setOnClickListener { safeSeek(-DEFAULT_SEEK_TIME_MS) }
+
+        playButton.setOnSwitchListener { onSwitchPlayPause(it) }
         fullScreenButton.setOnSwitchListener { onSwitchFullScreen(it) }
 
         playerTimeBar.addListener(componentListener)
 
-        controllerContainer.setOnClickListener {
-            if (buttonsContainer.isVisible) {
-                hide()
-            } else {
-                show()
-            }
+        rootControlsContainer.setOnClickListener {
+            if (playerButtonsContainer.isVisible) hideControls() else showControls()
         }
     }
 
-    private fun seek() {
-        safeSeek(+DEFAULT_SEEK_TIME_MS)
+    private fun setupViewOrientation() {
+        if (isOnFullScreen()) switchToFullScreen() else switchToPortrait()
     }
 
-    private fun rewind() {
-        safeSeek(-DEFAULT_SEEK_TIME_MS)
+    private fun initTimers() {
+        cancelTimers()
+
+        showControls()
+        progressTimer.repeat(MAX_PROGRESS_UPDATE_MS, this::updateProgress)
     }
 
     private fun safeSeek(offsetPosition: Long) {
@@ -148,22 +111,11 @@ class PlayerControllerView @JvmOverloads constructor(
         }
     }
 
-    private fun updateTimeline() {
-        player?.also { playerTimeBar.setDuration(it.duration) }
-    }
-
-    private fun updateProgress() {
-        player?.also {
-            playerTimeBar.setPosition(it.currentPosition)
-            playerTimeBar.setBufferedPosition(it.bufferedPosition)
-        }
-    }
-
-    private fun updatePlayButton(isPlaying: Boolean) {
+    private fun updatePlayButtonState(isPlaying: Boolean) {
         if (isPlaying) {
-            playPauseButton.state = SwitchButton.State.FINAL
+            playButton.state = SwitchButton.State.FINAL
         } else {
-            playPauseButton.state = SwitchButton.State.INITIAL
+            playButton.state = SwitchButton.State.INITIAL
         }
     }
 
@@ -185,42 +137,76 @@ class PlayerControllerView @JvmOverloads constructor(
         }
     }
 
-    private fun setupViewOrientation() {
-        if (isOnFullScreen()) {
-            switchToFullScreen()
-        } else {
-            switchToPortrait()
-        }
-    }
-
-    fun toPortraitMode() {
-        fullScreenButton.state = SwitchButton.State.INITIAL
-    }
-
-    fun toFullScreenMode() {
-        fullScreenButton.state = SwitchButton.State.FINAL
-    }
-
     private fun switchToFullScreen() {
-        playerTimeBar.toFullScreenConstraints()
-        buttonsContainer.setBottomMargin(0f)
+        bottomBarContainer.moveY(0f)
+        playerTimeBar.horizontalPadding(16f)
+        timelinePlaceholder.isVisible = false
     }
 
     private fun switchToPortrait() {
-        playerTimeBar.toPortraitConstraints()
-        buttonsContainer.setBottomMargin(playerTimeBar.barTopHeight)
+        bottomBarContainer.moveY(11f)
+        playerTimeBar.horizontalPadding(-8f)
+        timelinePlaceholder.isVisible = true
     }
 
-    private fun initTimers() {
-        cancelTimers()
+    //visibility ====================================
+    private fun showControls() {
+        if (!isVisible()) {
+            playerButtonsContainer.isVisible = true
+            fullScreenButton.isVisible = true
+            showTimeBar()
+        }
 
-        show()
-        progressTimer.repeat(MAX_PROGRESS_UPDATE_MS, this::updateProgress)
+        hideAfterTimeout()
     }
 
-    private fun isVisible() = buttonsContainer.isVisible
+    private fun hideControls() {
+        if (isVisible()) {
+            playerButtonsContainer.isVisible = false
+            fullScreenButton.isVisible = false
+            hideTimeBar()
+            hideTimer.cancel()
+        }
+    }
+
+    private fun showTimeBar() {
+        playerTimeBar.showScrubber(SCRUBBER_ANIM_DURATION)
+        playerTimeBar.isVisible = true
+    }
+
+    private fun hideTimeBar() {
+        playerTimeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
+        if (isOnFullScreen()) {
+            playerTimeBar.isVisible = false
+        }
+    }
+
+    private fun hideAfterTimeout() {
+        if (isAttachedToWindow) {
+            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS, this::hideControls)
+        }
+    }
+    //end visibility ===============================================
+
+    private fun updateTimeline() {
+        player?.also { playerTimeBar.setDuration(it.duration) }
+    }
+
+    private fun updateProgress() {
+        player?.also {
+            playerTimeBar.setPosition(it.currentPosition)
+            playerTimeBar.setBufferedPosition(it.bufferedPosition)
+        }
+    }
+
+    private fun isVisible() = playerButtonsContainer.isVisible
 
     private fun isOnFullScreen() = fullScreenButton.state == SwitchButton.State.FINAL
+
+    override fun onDetachedFromWindow() {
+        cancelTimers()
+        super.onDetachedFromWindow()
+    }
 
     private fun cancelTimers() {
         hideTimer.cancel()
@@ -236,11 +222,6 @@ class PlayerControllerView @JvmOverloads constructor(
 
     inner class ComponentListener : Player.EventListener, OnScrubListener {
 
-        //player
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            updatePlayButton(isPlaying)
-        }
-
         override fun onTimelineChanged(timeline: Timeline, reason: Int) {
             updateTimeline()
         }
@@ -249,9 +230,10 @@ class PlayerControllerView @JvmOverloads constructor(
             updateTimeline()
         }
 
-        //timebar
         override fun onPlaybackStateChanged(state: Int) {
-            bufferingSpinProgress.isVisible = state == STATE_BUFFERING
+            val isBuffering = state == STATE_BUFFERING
+            bufferingSpinProgress.isVisible = isBuffering
+            updatePlayButtonState(!isBuffering)
             updateProgress()
         }
 

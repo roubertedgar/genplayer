@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.widget.FrameLayout
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -64,13 +63,11 @@ class PlayerViewSurface @JvmOverloads constructor(
     }
 
     fun enterOnPictureInPictureMode() {
-        timelinePlaceholder.isVisible = false
         playerViewController.toPortraitMode()
         playerViewController.disable()
     }
 
     fun exitFromPictureInPictureMode() {
-        timelinePlaceholder.isVisible = true
         playerViewController.enable()
     }
 
