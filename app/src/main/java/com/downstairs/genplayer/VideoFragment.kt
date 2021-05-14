@@ -3,7 +3,9 @@ package com.downstairs.genplayer
 import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.downstairs.genplayer.content.Content
 import kotlinx.android.synthetic.main.video_fragment.*
@@ -16,6 +18,15 @@ class VideoFragment : Fragment(R.layout.video_fragment), PictureInPictureFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()
         setupListeners()
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    findNavController().navigateUp()
+                }
+
+            })
 
         playerView.setLifecycleOwner(this)
 

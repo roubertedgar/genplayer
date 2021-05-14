@@ -14,9 +14,14 @@
         <activity
             android:name=".VideoActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:supportsPictureInPicture="true"
-            tools:targetApi="n">
+            tools:targetApi="n" />
+
+        <activity
+            android:name=".SplashActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

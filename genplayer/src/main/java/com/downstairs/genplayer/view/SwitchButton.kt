@@ -20,8 +20,7 @@ class SwitchButton @JvmOverloads constructor(
 
     private val attributes = context.obtainStyledAttributes(attrs, R.styleable.SwitchButton)
     private val finalAnimatedDrawable = getDrawable(R.styleable.SwitchButton_drawable_final)
-    private val initialAnimatedDrawable =
-        getDrawable(R.styleable.SwitchButton_drawable_initial, finalAnimatedDrawable)
+    private val initialAnimatedDrawable = getDrawable(R.styleable.SwitchButton_drawable_initial, finalAnimatedDrawable)
 
     private var onSwitch: (State) -> Unit = {}
 
