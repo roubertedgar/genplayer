@@ -48,21 +48,24 @@ object Dependencies {
 
     object Test {
         const val jUnit = "junit:junit:4.13"
+        const val assertJ = "org.assertj:assertj-core:3.13.2"
         const val mockitoInline = "org.mockito:mockito-inline:2.28.2"
         const val mockitoKotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-        const val assertJ = "org.assertj:assertj-core:3.13.2"
 
-        const val androidxCore = "androidx.test:core-ktx:1.2.0"
-        const val androidxJunit = "androidx.test.ext:junit-ktx:1.1.1"
+        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3"
 
+        const val test = "androidx.test:test:1.3.0"
         const val archCore = "android.arch.core:core-testing:1.1.1"
 
-        const val robolectric = "org.robolectric:robolectric:4.3"
-        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3"
-        const val fragment = "androidx.fragment:fragment-testing:1.2.4"
+        const val robolectric = "org.robolectric:robolectric:4.5.1"
 
-        const val runner = "androidx.test:runner:1.2.0"
-        const val espresso = "androidx.test.espresso:espresso-core:3.2.0"
+        const val androidxJunit = "androidx.test.ext:junit-ktx:1.1.2"
+        const val androidxCore = "androidx.test:core-ktx:1.3.0"
+        const val rules = "androidx.test:rules:1.3.0"
+        const val runner = "androidx.test:runner:1.3.0"
+
+        const val fragment = "androidx.fragment:fragment-testing:1.3.4"
+        const val espresso = "androidx.test.espresso:espresso-core:3.3.0"
     }
 
     object ExoPlayer {
@@ -92,6 +95,6 @@ object Plugins {
 
 object Path {
     const val androidGradle = "com.android.tools.build:gradle:4.1.3"
-    const val playServices = "com.google.gms:google-services:4.3.3"
+    const val playServices = "com.google.gms:google-services:4.3.8"
     const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
 }

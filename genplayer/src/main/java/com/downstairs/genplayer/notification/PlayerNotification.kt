@@ -82,7 +82,7 @@ class PlayerNotification @Inject constructor(private val context: Context) {
 
     private fun createMediaStyle(sessionToken: MediaSessionCompat.Token): MediaStyle {
         return MediaStyle()
-            .setShowActionsInCompactView(1)
+            .setShowActionsInCompactView(0,1,2)
             .setMediaSession(sessionToken)
     }
 

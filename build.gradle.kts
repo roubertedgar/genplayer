@@ -14,6 +14,7 @@ buildscript {
     dependencies {
         classpath(Path.androidGradle)
         classpath(Path.kotlinGradle)
+        classpath(Path.playServices)
     }
 }
 
@@ -57,6 +58,15 @@ fun AndroidExtension.applyCommonConfigs() {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_1_8
         sourceCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        getByName("test") {
+            java.srcDir("src/sharedTest/kotlin")
+        }
+        getByName("androidTest") {
+            java.srcDir("src/sharedTest/kotlin")
+        }
     }
 
     testOptions {

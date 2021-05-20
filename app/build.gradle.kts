@@ -47,22 +47,22 @@ dependencies {
 
     implementation(Dependencies.ExoPlayer.cast)
 
-    testImplementation(Dependencies.Test.jUnit)
-    testImplementation(Dependencies.Test.mockitoInline)
-    testImplementation(Dependencies.Test.mockitoKotlin)
-    testImplementation(Dependencies.Test.assertJ)
+    androidTestImplementation(Dependencies.Test.jUnit)
 
-    testImplementation(Dependencies.Test.androidxCore)
-    testImplementation(Dependencies.Test.androidxJunit)
+    debugImplementation("androidx.fragment:fragment-testing:1.4.0-alpha01")
+    debugImplementation("androidx.test:core:1.4.0-beta01")
 
+    testImplementation("androidx.test:core:1.4.0-beta01")
+    testImplementation("androidx.test.ext:junit:1.1.3-beta01")
+    testImplementation("androidx.test:runner:1.4.0-beta01")
+    testImplementation("androidx.test.espresso:espresso-core:3.4.0-beta01")
+    testImplementation("org.robolectric:annotations:4.5.1")
     testImplementation(Dependencies.Test.robolectric)
 
-    testImplementation(Dependencies.Test.archCore)
-    testImplementation(Dependencies.Test.coroutines)
-    testImplementation(Dependencies.Test.fragment)
-
-    androidTestImplementation(Dependencies.Test.runner)
-    androidTestImplementation(Dependencies.Test.espresso)
-
+    androidTestImplementation("androidx.test:core:1.4.0-beta01")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3-beta01")
+    androidTestImplementation("androidx.test:runner:1.4.0-beta01")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0-beta01")
+    androidTestImplementation("org.robolectric:annotations:4.5.1")
     kaptTest(Dependencies.daggerCompiler)
 }

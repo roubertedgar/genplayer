@@ -36,7 +36,7 @@ class VideoFragment : Fragment(R.layout.video_fragment), PictureInPictureFragmen
                     "Eita nois",
                     "Fodasse",
                     "https://storage.googleapis.com/wvmedia/clear/h264/tears/tears.mpd",
-                    "",
+                    "https://neilpatel.com/wp-content/uploads/2017/09/image-editing-tools.jpg",
                     "application/dash+xml",
                     emptyMap(),
                     0
