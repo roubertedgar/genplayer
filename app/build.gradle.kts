@@ -49,20 +49,18 @@ dependencies {
 
     androidTestImplementation(Dependencies.Test.jUnit)
 
-    debugImplementation("androidx.fragment:fragment-testing:1.4.0-alpha01")
-    debugImplementation("androidx.test:core:1.4.0-beta01")
+    debugImplementation(Dependencies.Test.androidxCore)
+    debugImplementation(Dependencies.Test.fragment)
 
-    testImplementation("androidx.test:core:1.4.0-beta01")
-    testImplementation("androidx.test.ext:junit:1.1.3-beta01")
-    testImplementation("androidx.test:runner:1.4.0-beta01")
-    testImplementation("androidx.test.espresso:espresso-core:3.4.0-beta01")
-    testImplementation("org.robolectric:annotations:4.5.1")
+    testImplementation(Dependencies.Test.androidxCore)
+    testImplementation(Dependencies.Test.androidxJunit)
+    testImplementation(Dependencies.Test.runner)
+    testImplementation(Dependencies.Test.espresso)
     testImplementation(Dependencies.Test.robolectric)
 
-    androidTestImplementation("androidx.test:core:1.4.0-beta01")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3-beta01")
-    androidTestImplementation("androidx.test:runner:1.4.0-beta01")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0-beta01")
-    androidTestImplementation("org.robolectric:annotations:4.5.1")
+    androidTestImplementation(Dependencies.Test.androidxJunit)
+    androidTestImplementation(Dependencies.Test.runner)
+    androidTestImplementation(Dependencies.Test.espresso)
+    androidTestImplementation(Dependencies.Test.robolectricAnnotations)
     kaptTest(Dependencies.daggerCompiler)
 }

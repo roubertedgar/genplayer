@@ -14,13 +14,17 @@ object Dependencies {
         const val activity = "androidx.activity:activity-ktx:1.1.0"
         const val fragment = "androidx.fragment:fragment-ktx:1.2.4"
 
-        const val lifecycleLiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
-        const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
-        const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+        const val lifecycleLiveData =
+            "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+        const val lifecycleExtensions =
+            "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
+        const val lifecycleViewModel =
+            "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
 
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
 
-        const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+        const val navigationFragment =
+            "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
         const val navigationUI = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
     }
 
@@ -47,25 +51,23 @@ object Dependencies {
     const val daggerProcessor = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
 
     object Test {
+        const val robolectricVersion = "4.5.1"
+
         const val jUnit = "junit:junit:4.13"
         const val assertJ = "org.assertj:assertj-core:3.13.2"
         const val mockitoInline = "org.mockito:mockito-inline:2.28.2"
         const val mockitoKotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-
         const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3"
 
-        const val test = "androidx.test:test:1.3.0"
-        const val archCore = "android.arch.core:core-testing:1.1.1"
+        const val robolectric = "org.robolectric:robolectric:${robolectricVersion}"
+        const val robolectricAnnotations = "org.robolectric:annotations:${robolectricVersion}"
 
-        const val robolectric = "org.robolectric:robolectric:4.5.1"
-
-        const val androidxJunit = "androidx.test.ext:junit-ktx:1.1.2"
         const val androidxCore = "androidx.test:core-ktx:1.3.0"
+        const val androidxJunit = "androidx.test.ext:junit-ktx:1.1.2"
         const val rules = "androidx.test:rules:1.3.0"
         const val runner = "androidx.test:runner:1.3.0"
-
-        const val fragment = "androidx.fragment:fragment-testing:1.3.4"
         const val espresso = "androidx.test.espresso:espresso-core:3.3.0"
+        const val fragment = "androidx.fragment:fragment-testing:1.3.4"
     }
 
     object ExoPlayer {
@@ -75,7 +77,8 @@ object Dependencies {
         const val dash = "com.google.android.exoplayer:exoplayer-dash:${Versions.exoplayer}"
         const val ui = "com.google.android.exoplayer:exoplayer-ui:${Versions.exoplayer}"
         const val okhttp = "com.google.android.exoplayer:extension-okhttp:${Versions.exoplayer}"
-        const val mediaSession = "com.google.android.exoplayer:extension-mediasession:${Versions.exoplayer}"
+        const val mediaSession =
+            "com.google.android.exoplayer:extension-mediasession:${Versions.exoplayer}"
         const val cast = "com.google.android.exoplayer:extension-cast:${Versions.exoplayer}"
     }
 }
