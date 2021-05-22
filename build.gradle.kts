@@ -61,11 +61,13 @@ fun AndroidExtension.applyCommonConfigs() {
     }
 
     sourceSets {
+        val sharedTest = "src/sharedTest"
         getByName("test") {
-            java.srcDir("src/sharedTest/kotlin")
+            java.srcDir("$sharedTest/kotlin")
+            resources.srcDirs("$sharedTest/resources")
         }
         getByName("androidTest") {
-            java.srcDir("src/sharedTest/kotlin")
+            java.srcDir("$sharedTest/kotlin")
         }
     }
 
