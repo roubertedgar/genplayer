@@ -1,6 +1,6 @@
 object Versions {
     const val kotlin = "1.3.72"
-    const val navigation = "2.2.2"
+    const val navigation = "2.3.5"
     const val lifecycle = "2.2.0"
     const val retrofit = "2.6.1"
     const val dagger = "2.30.1"
@@ -14,17 +14,13 @@ object Dependencies {
         const val activity = "androidx.activity:activity-ktx:1.1.0"
         const val fragment = "androidx.fragment:fragment-ktx:1.2.4"
 
-        const val lifecycleLiveData =
-            "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
-        const val lifecycleExtensions =
-            "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
-        const val lifecycleViewModel =
-            "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+        const val lifecycleLiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+        const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
+        const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
 
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
 
-        const val navigationFragment =
-            "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+        const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
         const val navigationUI = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
     }
 
@@ -68,6 +64,7 @@ object Dependencies {
         const val runner = "androidx.test:runner:1.3.0"
         const val espresso = "androidx.test.espresso:espresso-core:3.3.0"
         const val fragment = "androidx.fragment:fragment-testing:1.3.4"
+        const val navigation = "androidx.navigation:navigation-testing:${Versions.navigation}"
     }
 
     object ExoPlayer {
@@ -77,8 +74,7 @@ object Dependencies {
         const val dash = "com.google.android.exoplayer:exoplayer-dash:${Versions.exoplayer}"
         const val ui = "com.google.android.exoplayer:exoplayer-ui:${Versions.exoplayer}"
         const val okhttp = "com.google.android.exoplayer:extension-okhttp:${Versions.exoplayer}"
-        const val mediaSession =
-            "com.google.android.exoplayer:extension-mediasession:${Versions.exoplayer}"
+        const val mediaSession = "com.google.android.exoplayer:extension-mediasession:${Versions.exoplayer}"
         const val cast = "com.google.android.exoplayer:extension-cast:${Versions.exoplayer}"
     }
 }

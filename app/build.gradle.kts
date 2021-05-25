@@ -51,16 +51,21 @@ dependencies {
 
     debugImplementation(Dependencies.Test.androidxCore)
     debugImplementation(Dependencies.Test.fragment)
+    debugImplementation(Dependencies.Test.navigation)
 
     testImplementation(Dependencies.Test.androidxCore)
     testImplementation(Dependencies.Test.androidxJunit)
+    testImplementation(Dependencies.Test.navigation)
     testImplementation(Dependencies.Test.runner)
     testImplementation(Dependencies.Test.espresso)
     testImplementation(Dependencies.Test.robolectric)
+    testImplementation(Dependencies.Test.assertJ)
 
     androidTestImplementation(Dependencies.Test.androidxJunit)
+    androidTestImplementation(Dependencies.Test.navigation)
     androidTestImplementation(Dependencies.Test.runner)
     androidTestImplementation(Dependencies.Test.espresso)
     androidTestImplementation(Dependencies.Test.robolectricAnnotations)
+    androidTestImplementation(Dependencies.Test.assertJ)
     kaptTest(Dependencies.daggerCompiler)
 }
