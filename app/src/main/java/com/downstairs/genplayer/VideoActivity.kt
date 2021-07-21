@@ -30,7 +30,7 @@ class VideoActivity : AppCompatActivity(R.layout.video_activity) {
                 PictureInPictureParams.Builder().build()
             )
 
-            setExcludeFromRecents(true)
+            setExcludeFromRecent(true)
         }
     }
 
@@ -39,7 +39,7 @@ class VideoActivity : AppCompatActivity(R.layout.video_activity) {
     ) {
         if (!isOnPictureInPicture) {
             pictureInPictureFragment?.exitFromPictureInPicture()
-            setExcludeFromRecents(false)
+            setExcludeFromRecent(false)
         }
     }
 }
@@ -47,7 +47,7 @@ class VideoActivity : AppCompatActivity(R.layout.video_activity) {
 val FragmentActivity.currentFragment: Fragment?
     get() = mainFragmentHost.childFragmentManager.fragments.firstOrNull()
 
-fun FragmentActivity.setExcludeFromRecents(exclude: Boolean) {
+fun FragmentActivity.setExcludeFromRecent(exclude: Boolean) {
     val activityManager = getSystemService(AppCompatActivity.ACTIVITY_SERVICE) as? ActivityManager
 
     if (activityManager != null) {

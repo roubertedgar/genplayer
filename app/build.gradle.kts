@@ -3,6 +3,11 @@ plugins {
     id(Plugins.Kotlin.android)
     id(Plugins.Kotlin.androidExtensions)
     id(Plugins.Kotlin.kapt)
+    jacoco
+}
+
+jacoco{
+    toolVersion = "0.8.4"
 }
 
 android {
@@ -17,6 +22,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+
+        getByName("debug"){
+            isTestCoverageEnabled = true
         }
     }
 }
@@ -52,20 +61,17 @@ dependencies {
     debugImplementation(Dependencies.Test.androidxCore)
     debugImplementation(Dependencies.Test.fragment)
     debugImplementation(Dependencies.Test.navigation)
+    debugImplementation(Dependencies.Test.assertJ)
 
-    testImplementation(Dependencies.Test.androidxCore)
     testImplementation(Dependencies.Test.androidxJunit)
-    testImplementation(Dependencies.Test.navigation)
     testImplementation(Dependencies.Test.runner)
     testImplementation(Dependencies.Test.espresso)
     testImplementation(Dependencies.Test.robolectric)
-    testImplementation(Dependencies.Test.assertJ)
 
     androidTestImplementation(Dependencies.Test.androidxJunit)
     androidTestImplementation(Dependencies.Test.navigation)
     androidTestImplementation(Dependencies.Test.runner)
     androidTestImplementation(Dependencies.Test.espresso)
     androidTestImplementation(Dependencies.Test.robolectricAnnotations)
-    androidTestImplementation(Dependencies.Test.assertJ)
     kaptTest(Dependencies.daggerCompiler)
 }
