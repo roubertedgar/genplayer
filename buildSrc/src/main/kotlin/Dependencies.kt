@@ -1,9 +1,9 @@
 object Versions {
-    const val kotlin = "1.3.72"
+    const val kotlin = "1.5.0"
     const val navigation = "2.3.5"
     const val lifecycle = "2.2.0"
     const val retrofit = "2.6.1"
-    const val dagger = "2.30.1"
+    const val dagger = "2.38.1"
     const val exoplayer = "2.12.1"
 }
 
@@ -14,13 +14,17 @@ object Dependencies {
         const val activity = "androidx.activity:activity-ktx:1.1.0"
         const val fragment = "androidx.fragment:fragment-ktx:1.2.4"
 
-        const val lifecycleLiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
-        const val lifecycleExtensions = "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
-        const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+        const val lifecycleLiveData =
+            "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+        const val lifecycleExtensions =
+            "androidx.lifecycle:lifecycle-extensions:${Versions.lifecycle}"
+        const val lifecycleViewModel =
+            "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
 
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
 
-        const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+        const val navigationFragment =
+            "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
         const val navigationUI = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
     }
 
@@ -44,10 +48,9 @@ object Dependencies {
     const val daggerAndroid = "com.google.dagger:dagger-android:${Versions.dagger}"
     const val daggerSupport = "com.google.dagger:dagger-android-support:${Versions.dagger}"
     const val daggerCompiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
-    const val daggerProcessor = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
 
     object Test {
-        const val robolectricVersion = "4.5.1"
+        private const val robolectricVersion = "4.5.1"
 
         const val jUnit = "junit:junit:4.13"
         const val assertJ = "org.assertj:assertj-core:3.13.2"
@@ -74,7 +77,8 @@ object Dependencies {
         const val dash = "com.google.android.exoplayer:exoplayer-dash:${Versions.exoplayer}"
         const val ui = "com.google.android.exoplayer:exoplayer-ui:${Versions.exoplayer}"
         const val okhttp = "com.google.android.exoplayer:extension-okhttp:${Versions.exoplayer}"
-        const val mediaSession = "com.google.android.exoplayer:extension-mediasession:${Versions.exoplayer}"
+        const val mediaSession =
+            "com.google.android.exoplayer:extension-mediasession:${Versions.exoplayer}"
         const val cast = "com.google.android.exoplayer:extension-cast:${Versions.exoplayer}"
     }
 }
@@ -93,7 +97,7 @@ object Plugins {
 }
 
 object Path {
-    const val androidGradle = "com.android.tools.build:gradle:4.1.3"
+    const val androidGradle = "com.android.tools.build:gradle:4.2.0"
     const val playServices = "com.google.gms:google-services:4.3.8"
     const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
 }

@@ -50,7 +50,6 @@ dependencies {
     implementation(Dependencies.daggerAndroid)
     implementation(Dependencies.daggerSupport)
     kapt(Dependencies.daggerCompiler)
-    kapt(Dependencies.daggerProcessor)
 
     implementation(project(":genplayer"))
 
