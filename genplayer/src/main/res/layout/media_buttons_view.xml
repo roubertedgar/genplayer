@@ -7,31 +7,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:showIn="@layout/player_controller_view">
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small"
-        android:gravity="end"
-        android:orientation="horizontal"
-        android:theme="@style/Player.Theme.Menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.mediarouter.app.MediaRouteButton
-            android:id="@+id/castButton"
-            android:layout_width="@dimen/menu_item_size"
-            android:layout_height="@dimen/menu_item_size"
-            android:layout_marginEnd="@dimen/small" />
-
-        <ImageButton
-            android:layout_width="@dimen/menu_item_size"
-            android:layout_height="@dimen/menu_item_size"
-            android:src="@drawable/ic_more_menu" />
-    </LinearLayout>
+    tools:showIn="@layout/media_control_view">
 
     <ProgressBar
         android:id="@+id/bufferingSpinProgress"
@@ -51,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
         app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.4" />
 
     <ImageButton
