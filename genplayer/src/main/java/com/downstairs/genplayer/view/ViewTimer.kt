@@ -14,10 +14,10 @@ class ViewTimer {
     fun schedule(delayMs: Long, action: () -> Unit) {
         cancel()
 
-        val defaultScope = CoroutineScope(Dispatchers.Default)
+        val ioScope = CoroutineScope(Dispatchers.IO)
         val mainScope = CoroutineScope(Dispatchers.Main)
 
-        job = defaultScope.launch {
+        job = ioScope.launch {
             delay(delayMs)
             mainScope.launch { action() }
         }
@@ -34,10 +34,10 @@ class ViewTimer {
     ) {
         cancel()
 
-        val defaultScope = CoroutineScope(Dispatchers.Default)
+        val ioScope = CoroutineScope(Dispatchers.IO)
         val mainScope = CoroutineScope(Dispatchers.Main)
 
-        job = defaultScope.launch {
+        job = ioScope.launch {
             delay(initialDelayMs)
 
             while (true) {

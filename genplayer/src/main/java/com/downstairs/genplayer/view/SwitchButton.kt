@@ -14,17 +14,21 @@ class SwitchButton @JvmOverloads constructor(
 ) : AppCompatImageButton(context, attrs, defStyleAttr) {
 
     enum class State {
-        INITIAL,
-        FINAL
+        PRIMARY,
+        FINAL;
+
+        val isPrimary: Boolean
+            get() = this == PRIMARY
     }
 
     private val attributes = context.obtainStyledAttributes(attrs, R.styleable.SwitchButton)
     private val finalAnimatedDrawable = getDrawable(R.styleable.SwitchButton_drawable_final)
-    private val initialAnimatedDrawable = getDrawable(R.styleable.SwitchButton_drawable_initial, finalAnimatedDrawable)
+    private val initialAnimatedDrawable =
+        getDrawable(R.styleable.SwitchButton_drawable_initial, finalAnimatedDrawable)
 
     private var onSwitch: (State) -> Unit = {}
 
-    var state: State = State.INITIAL
+    var state: State = State.PRIMARY
         set(value) {
             if (field != value) {
                 field = value
@@ -48,7 +52,7 @@ class SwitchButton @JvmOverloads constructor(
     }
 
     private fun toggleState() {
-        val state = if (state == State.INITIAL) State.FINAL else State.INITIAL
+        val state = if (state == State.PRIMARY) State.FINAL else State.PRIMARY
         this.state = state
     }
 
@@ -60,7 +64,7 @@ class SwitchButton @JvmOverloads constructor(
 
     private fun chooseAnimatedDrawable() {
         val drawable =
-            if (state == State.INITIAL) initialAnimatedDrawable else finalAnimatedDrawable
+            if (state == State.PRIMARY) initialAnimatedDrawable else finalAnimatedDrawable
 
         if (drawable != this.drawable) {
             setImageDrawable(drawable)

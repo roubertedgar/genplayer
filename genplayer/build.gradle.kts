@@ -19,6 +19,10 @@ android {
             )
         }
     }
+
+    buildFeatures.apply {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -31,7 +35,7 @@ dependencies {
     implementation(Dependencies.Androidx.constraintLayout)
     implementation(Dependencies.materialDesign)
 
-    implementation("androidx.media:media:1.2.1")
+    implementation("androidx.media:media:1.4.1")
     implementation("com.github.bumptech.glide:glide:4.12.0")
     kapt("com.github.bumptech.glide:compiler:4.12.0")
 

@@ -4,19 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
+import com.downstairs.genplayer.databinding.PlayerControllerViewBinding
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PAUSE
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PLAY
 import com.downstairs.genplayer.tools.orientation.Orientation
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.DiscontinuityReason
-import com.google.android.exoplayer2.Player.STATE_BUFFERING
 import com.google.android.exoplayer2.Timeline
-import com.google.android.exoplayer2.ui.TimeBar
-import com.google.android.exoplayer2.ui.TimeBar.OnScrubListener
-import kotlinx.android.synthetic.main.player_controller_view.view.*
-import kotlinx.android.synthetic.main.player_main_control_buttons_layout.view.*
 
 class PlayerControllerView @JvmOverloads constructor(
     context: Context,
@@ -25,23 +20,40 @@ class PlayerControllerView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private var listener: ControllerListener = object : ControllerListener {}
-    private val componentListener = ComponentListener()
 
-    private var progressTimer = ViewTimer()
-    private var hideTimer = ViewTimer()
-
+    private var binding: PlayerControllerViewBinding
     private var player: Player? = null
+
+ //   private var progressTimer = ViewTimer()
 
     init {
         inflate(context, R.layout.player_controller_view, this)
+        binding = PlayerControllerViewBinding.bind(rootView)
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        if (isInEditMode) return
 
-        setupListeners()
-        setupViewOrientation()
-        initTimers()
+        binding.mediaControl.setListener { onCommandChange(it) }
+    }
+
+    private fun onCommandChange(command: Command) {
+        when (command) {
+            is Command.Rotate -> changeOrientation(command.isPortrait)
+            is Command.Playback -> playbackChanged(command.isPlaying)
+            is Command.Forward -> safeSeek(+DEFAULT_SEEK_TIME_MS)
+            is Command.Rewind -> safeSeek(-DEFAULT_SEEK_TIME_MS)
+            is Command.Seek -> player?.seekTo(command.position)
+        }
+    }
+
+    private fun changeOrientation(portrait: Boolean) {
+        if (portrait) {
+            listener.onOrientationChanged(Orientation.PORTRAIT)
+        } else {
+            listener.onOrientationChanged(Orientation.LANDSCAPE)
+        }
     }
 
     fun setListener(listener: ControllerListener) {
@@ -50,50 +62,26 @@ class PlayerControllerView @JvmOverloads constructor(
 
     fun setPlayer(player: Player) {
         this.player = player
-        this.player?.addListener(componentListener)
+        this.player?.addListener(object : Player.EventListener {
 
-        updateTimeline()
-    }
+            override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+                updateProgress()
+            }
 
-    fun toPortraitMode() {
-        fullScreenButton.state = SwitchButton.State.INITIAL
-    }
+            override fun onPositionDiscontinuity(@DiscontinuityReason reason: Int) {
+                updateProgress()
+            }
 
-    fun toFullScreenMode() {
-        fullScreenButton.state = SwitchButton.State.FINAL
-    }
-
-    fun disable() {
-        isVisible = false
-    }
-
-    fun enable() {
-        isVisible = true
-    }
-
-    private fun setupListeners() {
-        fastForwardButton.setOnClickListener { safeSeek(+DEFAULT_SEEK_TIME_MS) }
-        rewindButton.setOnClickListener { safeSeek(-DEFAULT_SEEK_TIME_MS) }
-
-        playButton.setOnSwitchListener { onSwitchPlayPause(it) }
-        fullScreenButton.setOnSwitchListener { onSwitchFullScreen(it) }
-
-        playerTimeBar.addListener(componentListener)
-
-        rootControlsContainer.setOnClickListener {
-            if (playerButtonsContainer.isVisible) hideControls() else showControls()
-        }
-    }
-
-    private fun setupViewOrientation() {
-        if (isOnFullScreen()) switchToFullScreen() else switchToPortrait()
-    }
-
-    private fun initTimers() {
-        cancelTimers()
-
-        showControls()
-        progressTimer.repeat(MAX_PROGRESS_UPDATE_MS, this::updateProgress)
+            override fun onPlaybackStateChanged(state: Int) {
+                if (player.isPlaying) {
+                    //     progressTimer.repeat(MAX_PROGRESS_UPDATE_MS) { updateProgress() }
+                    binding.mediaControl.updatePlayback(isPlaying = true)
+                } else {
+                    binding.mediaControl.updatePlayback(isPlaying = false)
+                  //  progressTimer.cancel()
+                }
+            }
+        })
     }
 
     private fun safeSeek(offsetPosition: Long) {
@@ -111,144 +99,39 @@ class PlayerControllerView @JvmOverloads constructor(
         }
     }
 
-    private fun updatePlayButtonState(isPlaying: Boolean) {
+    private fun playbackChanged(isPlaying: Boolean) {
         if (isPlaying) {
-            playButton.state = SwitchButton.State.FINAL
-        } else {
-            playButton.state = SwitchButton.State.INITIAL
-        }
-    }
-
-    private fun onSwitchPlayPause(state: SwitchButton.State) {
-        if (state == SwitchButton.State.INITIAL) {
             context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
         } else {
             context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
         }
     }
 
-    private fun onSwitchFullScreen(state: SwitchButton.State) {
-        if (state == SwitchButton.State.INITIAL) {
-            listener.onOrientationChanged(Orientation.PORTRAIT)
-            switchToPortrait()
-        } else {
-            listener.onOrientationChanged(Orientation.LANDSCAPE)
-            switchToFullScreen()
-        }
-    }
-
-    private fun switchToFullScreen() {
-        bottomBarContainer.moveY(0f)
-        playerTimeBar.horizontalPadding(16f)
-        timelinePlaceholder.isVisible = false
-    }
-
-    private fun switchToPortrait() {
-        bottomBarContainer.moveY(11f)
-        playerTimeBar.horizontalPadding(-8f)
-        timelinePlaceholder.isVisible = true
-    }
-
-    //visibility ====================================
-    private fun showControls() {
-        if (!isVisible()) {
-            playerButtonsContainer.isVisible = true
-            fullScreenButton.isVisible = true
-            showTimeBar()
-        }
-
-        hideAfterTimeout()
-    }
-
-    private fun hideControls() {
-        if (isVisible()) {
-            playerButtonsContainer.isVisible = false
-            fullScreenButton.isVisible = false
-            hideTimeBar()
-            hideTimer.cancel()
-        }
-    }
-
-    private fun showTimeBar() {
-        playerTimeBar.showScrubber(SCRUBBER_ANIM_DURATION)
-        playerTimeBar.isVisible = true
-    }
-
-    private fun hideTimeBar() {
-        playerTimeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
-        if (isOnFullScreen()) {
-            playerTimeBar.isVisible = false
-        }
-    }
-
-    private fun hideAfterTimeout() {
-        if (isAttachedToWindow) {
-            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS, this::hideControls)
-        }
-    }
-    //end visibility ===============================================
-
-    private fun updateTimeline() {
-        player?.also { playerTimeBar.setDuration(it.duration) }
-    }
-
     private fun updateProgress() {
         player?.also {
-            playerTimeBar.setPosition(it.currentPosition)
-            playerTimeBar.setBufferedPosition(it.bufferedPosition)
+            binding.mediaControl.updateProgress(
+                it.currentPosition,
+                it.bufferedPosition,
+                it.duration
+            )
         }
     }
 
-    private fun isVisible() = playerButtonsContainer.isVisible
-
-    private fun isOnFullScreen() = fullScreenButton.state == SwitchButton.State.FINAL
-
     override fun onDetachedFromWindow() {
-        cancelTimers()
+     //   progressTimer.cancel()
         super.onDetachedFromWindow()
     }
 
-    private fun cancelTimers() {
-        hideTimer.cancel()
-        progressTimer.cancel()
+    fun enable() {}
+
+    fun disable() {}
+
+    fun toPortraitMode() {
+        changeOrientation(portrait = true)
     }
 
     companion object {
-        private const val MAX_PROGRESS_UPDATE_MS = 1000L
-        private const val DEFAULT_HIDE_DELAY_MS = 5000L
+        private const val MAX_PROGRESS_UPDATE_MS = 1200L
         private const val DEFAULT_SEEK_TIME_MS = 15000L
-        private const val SCRUBBER_ANIM_DURATION = 300L
-    }
-
-    inner class ComponentListener : Player.EventListener, OnScrubListener {
-
-        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-            updateTimeline()
-        }
-
-        override fun onPositionDiscontinuity(@DiscontinuityReason reason: Int) {
-            updateTimeline()
-        }
-
-        override fun onPlaybackStateChanged(state: Int) {
-            val isBuffering = state == STATE_BUFFERING
-            bufferingSpinProgress.isVisible = isBuffering
-            updatePlayButtonState(!isBuffering)
-            updateProgress()
-        }
-
-        override fun onScrubStart(timeBar: TimeBar, position: Long) {
-
-        }
-
-        override fun onScrubMove(timeBar: TimeBar, position: Long) {
-
-        }
-
-        override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
-            if (!canceled) {
-                player?.seekTo(position)
-            }
-        }
     }
 }

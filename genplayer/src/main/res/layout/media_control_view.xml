@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootControlsContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:theme="@style/Player.Theme"
@@ -19,8 +18,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/playerButtonsContainer"
-            layout="@layout/player_main_control_buttons_layout"
+            android:id="@+id/mediaButtons"
+            layout="@layout/media_buttons_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/large"
@@ -31,7 +30,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottomBarContainer"
+        android:id="@+id/bottomContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/aspectRatioContainer"
@@ -40,13 +39,13 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.downstairs.genplayer.view.SwitchButton
-            android:id="@+id/fullScreenButton"
+            android:id="@+id/orientation"
             android:layout_width="@dimen/large"
             android:layout_height="@dimen/large"
             android:layout_marginEnd="@dimen/normal"
             app:drawable_final="@drawable/exo_ic_fullscreen_exit"
             app:drawable_initial="@drawable/exo_ic_fullscreen_enter"
-            app:layout_constraintBottom_toTopOf="@+id/playerTimeBar"
+            app:layout_constraintBottom_toTopOf="@+id/time_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +53,7 @@
             tools:tint="@color/black" />
 
         <com.google.android.exoplayer2.ui.DefaultTimeBar
-            android:id="@+id/playerTimeBar"
+            android:id="@+id/time_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:bar_height="@dimen/timeline_bar_height"
@@ -68,7 +67,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
-        android:id="@+id/timelinePlaceholder"
+        android:id="@+id/timeBarPlaceHolder"
         android:layout_width="0dp"
         android:layout_height="@dimen/timeline_touch_height"
         app:layout_constraintBottom_toBottomOf="@+id/aspectRatioContainer"
