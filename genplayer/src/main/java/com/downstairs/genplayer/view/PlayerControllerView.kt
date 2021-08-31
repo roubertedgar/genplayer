@@ -8,10 +8,8 @@ import com.downstairs.genplayer.R
 import com.downstairs.genplayer.databinding.PlayerControllerViewBinding
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PAUSE
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PLAY
-import com.downstairs.genplayer.tools.orientation.Orientation
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.Player.DiscontinuityReason
-import com.google.android.exoplayer2.Timeline
+import com.google.android.exoplayer2.Player.STATE_BUFFERING
 
 class PlayerControllerView @JvmOverloads constructor(
     context: Context,
@@ -24,7 +22,7 @@ class PlayerControllerView @JvmOverloads constructor(
     private var binding: PlayerControllerViewBinding
     private var player: Player? = null
 
- //   private var progressTimer = ViewTimer()
+    private var progressTimer = ViewTimer()
 
     init {
         inflate(context, R.layout.player_controller_view, this)
@@ -40,19 +38,11 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun onCommandChange(command: Command) {
         when (command) {
-            is Command.Rotate -> changeOrientation(command.isPortrait)
             is Command.Playback -> playbackChanged(command.isPlaying)
             is Command.Forward -> safeSeek(+DEFAULT_SEEK_TIME_MS)
             is Command.Rewind -> safeSeek(-DEFAULT_SEEK_TIME_MS)
             is Command.Seek -> player?.seekTo(command.position)
-        }
-    }
-
-    private fun changeOrientation(portrait: Boolean) {
-        if (portrait) {
-            listener.onOrientationChanged(Orientation.PORTRAIT)
-        } else {
-            listener.onOrientationChanged(Orientation.LANDSCAPE)
+            is Command.Rotate -> listener.onOrientationChanged(command.orientation)
         }
     }
 
@@ -64,22 +54,26 @@ class PlayerControllerView @JvmOverloads constructor(
         this.player = player
         this.player?.addListener(object : Player.EventListener {
 
-            override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-                updateProgress()
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                if (isPlaying) {
+                    binding.mediaControl.play()
+                }
             }
 
-            override fun onPositionDiscontinuity(@DiscontinuityReason reason: Int) {
-                updateProgress()
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                if (!playWhenReady) {
+                    binding.mediaControl.pause()
+                }
             }
 
             override fun onPlaybackStateChanged(state: Int) {
-                if (player.isPlaying) {
-                    //     progressTimer.repeat(MAX_PROGRESS_UPDATE_MS) { updateProgress() }
-                    binding.mediaControl.updatePlayback(isPlaying = true)
+                if (state == STATE_BUFFERING) {
+                    binding.mediaControl.isLoading(true)
                 } else {
-                    binding.mediaControl.updatePlayback(isPlaying = false)
-                  //  progressTimer.cancel()
+                    binding.mediaControl.isLoading(false)
                 }
+
+                progressTimer.repeat(MAX_PROGRESS_UPDATE_MS) { updateProgress() }
             }
         })
     }
@@ -101,9 +95,9 @@ class PlayerControllerView @JvmOverloads constructor(
 
     private fun playbackChanged(isPlaying: Boolean) {
         if (isPlaying) {
-            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
-        } else {
             context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PLAY))
+        } else {
+            context.sendBroadcast(Intent(PLAYER_CONTROL_ACTION_PAUSE))
         }
     }
 
@@ -118,7 +112,7 @@ class PlayerControllerView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-     //   progressTimer.cancel()
+        progressTimer.cancel()
         super.onDetachedFromWindow()
     }
 
@@ -127,7 +121,7 @@ class PlayerControllerView @JvmOverloads constructor(
     fun disable() {}
 
     fun toPortraitMode() {
-        changeOrientation(portrait = true)
+        //  changeOrientation(portrait = true)
     }
 
     companion object {

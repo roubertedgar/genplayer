@@ -8,32 +8,31 @@
     tools:ignore="ContentDescription">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/aspectRatioContainer"
+        android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/black_a25"
         app:layout_constraintDimensionRatio="2.24:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/mediaButtons"
-            layout="@layout/media_buttons_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        android:id="@+id/mediaButtons"
+        layout="@layout/media_buttons_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/aspectRatioContainer"
+        app:layout_constraintBottom_toBottomOf="@+id/frame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
@@ -70,9 +69,9 @@
         android:id="@+id/timeBarPlaceHolder"
         android:layout_width="0dp"
         android:layout_height="@dimen/timeline_touch_height"
-        app:layout_constraintBottom_toBottomOf="@+id/aspectRatioContainer"
+        app:layout_constraintBottom_toBottomOf="@+id/frame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aspectRatioContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/frame" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

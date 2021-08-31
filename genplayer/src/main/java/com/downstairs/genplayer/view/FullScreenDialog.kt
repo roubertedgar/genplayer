@@ -65,6 +65,6 @@ class FullScreenDialog(context: Context) :
     }
 
     override fun onBackPressed() {
-      //  playerViewController?.toPortraitMode()
+        playerViewController?.toPortraitMode()
     }
 }

@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.databinding.MediaButtonsViewBinding
 import com.downstairs.genplayer.databinding.MediaControlViewBinding
+import com.downstairs.genplayer.tools.orientation.Orientation
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.TimeBar
 
@@ -17,12 +18,10 @@ class MediaControl @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val onClickListener: (View) -> Unit = { view -> onButtonClick(view) }
-
     private var control: MediaControlViewBinding
     private var buttons: MediaButtonsViewBinding
 
-    //private var hideTimer = ViewTimer()
+    private var hideTimer = ViewTimer()
     private var onCommand: (Command) -> Unit = {}
 
     init {
@@ -32,14 +31,19 @@ class MediaControl @JvmOverloads constructor(
         buttons = control.mediaButtons
     }
 
-    fun setListener(onCommand: (Command) -> Unit) {
-        this.onCommand = onCommand
-    }
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         setupListeners()
         if (isOnFullScreen()) switchToFullScreen() else switchToPortrait()
+    }
+
+    private val onClickListener: (View) -> Unit = { view ->
+        when (view) {
+            buttons.fastForward -> onCommand(Command.Forward)
+            buttons.rewind -> onCommand(Command.Rewind)
+        }
+
+        showControls()
     }
 
     private fun setupListeners() {
@@ -48,19 +52,35 @@ class MediaControl @JvmOverloads constructor(
         buttons.rewind.setOnClickListener(onClickListener)
         control.orientation.setOnClickListener(onClickListener)
 
+        buttons.playback.setOnSwitchListener { playbackSwitched(it) }
+        control.orientation.setOnSwitchListener { orientationSwitched(it) }
+
         control.root.setOnClickListener { onRootLayoutClick() }
         control.timeBar.onScrub { progress -> onCommand(Command.Seek(progress)) }
     }
 
-    private fun onButtonClick(view: View) {
-        when (view) {
-            control.orientation -> emitOrientationCommand()
-            buttons.playback -> emitPlaybackCommand()
+    fun setListener(onCommand: (Command) -> Unit) {
+        this.onCommand = onCommand
+    }
 
-            buttons.fastForward -> onCommand(Command.Forward)
-            buttons.rewind -> onCommand(Command.Rewind)
-        }
-        showControls()
+    fun play() {
+        buttons.playback.state = SwitchButton.State.FINAL
+    }
+
+    fun pause() {
+        buttons.playback.state = SwitchButton.State.PRIMARY
+    }
+
+    fun isLoading(isLoading: Boolean = false) {
+        buttons.bufferingSpinProgress.isVisible = isLoading
+        buttons.root.isVisible = isLoading
+        buttons.playback.isVisible = !isLoading
+    }
+
+    fun updateProgress(currentPosition: Long, bufferedPosition: Long, duration: Long) {
+        control.timeBar.setPosition(currentPosition)
+        control.timeBar.setBufferedPosition(bufferedPosition)
+        control.timeBar.setDuration(duration)
     }
 
     private fun onRootLayoutClick() {
@@ -68,28 +88,29 @@ class MediaControl @JvmOverloads constructor(
     }
 
     private fun showControls() {
+        control.frame.visibility = VISIBLE
         buttons.root.isVisible = true
         control.orientation.isVisible = true
         control.timeBar.isVisible = true
         control.timeBar.showScrubber(SCRUBBER_ANIM_DURATION)
-
-       // hideAfterTimeout()
+        hideAfterTimeout()
     }
 
     private fun hideControls() {
+        control.frame.visibility = INVISIBLE
         buttons.root.isVisible = false
         control.orientation.isVisible = false
         control.timeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
         if (isOnFullScreen()) control.timeBar.isVisible = false
 
-     //   hideTimer.cancel()
+        hideTimer.cancel()
     }
 
-//    private fun hideAfterTimeout() {
-//        if (isAttachedToWindow) {
-//            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS) { hideControls() }
-//        }
-//    }
+    private fun hideAfterTimeout() {
+        if (isAttachedToWindow) {
+            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS) { hideControls() }
+        }
+    }
 
     private fun switchToFullScreen() {
         control.bottomContainer.moveY(0f)
@@ -103,28 +124,20 @@ class MediaControl @JvmOverloads constructor(
         control.timeBarPlaceHolder.isVisible = true
     }
 
-     fun updatePlayback(isPlaying: Boolean) {
-        if (isPlaying) {
-            buttons.playback.state = SwitchButton.State.FINAL
+    private fun playbackSwitched(state: SwitchButton.State) {
+        if (state == SwitchButton.State.FINAL) {
+            onCommand(Command.Playback(isPlaying = true))
         } else {
-            buttons.playback.state = SwitchButton.State.PRIMARY
+            onCommand(Command.Playback(isPlaying = false))
         }
     }
 
-    fun updateProgress(currentPosition: Long, bufferedPosition: Long, duration: Long) {
-        control.timeBar.setPosition(currentPosition)
-        control.timeBar.setBufferedPosition(bufferedPosition)
-        control.timeBar.setDuration(duration)
-    }
-
-    private fun emitPlaybackCommand() {
-        val isPlaying = !control.orientation.state.isPrimary
-        onCommand(Command.Playback(isPlaying))
-    }
-
-    private fun emitOrientationCommand() {
-        val isPortrait = control.orientation.state.isPrimary
-        onCommand(Command.Rotate(isPortrait))
+    private fun orientationSwitched(state: SwitchButton.State) {
+        if (state == SwitchButton.State.PRIMARY) {
+            onCommand(Command.Rotate(Orientation.PORTRAIT))
+        } else {
+            onCommand(Command.Rotate(Orientation.LANDSCAPE))
+        }
     }
 
     private fun isOnFullScreen() = control.orientation.state == SwitchButton.State.FINAL
@@ -168,5 +181,5 @@ sealed class Command {
     object Forward : Command()
     data class Seek(val position: Long) : Command()
     data class Playback(val isPlaying: Boolean) : Command()
-    data class Rotate(val isPortrait: Boolean) : Command()
+    data class Rotate(val orientation: Orientation) : Command()
 }
