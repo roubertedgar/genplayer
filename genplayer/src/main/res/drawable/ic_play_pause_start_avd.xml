@@ -4,8 +4,8 @@
     <aapt:attr name="android:drawable">
         <vector
             android:name="ic_play_pause"
-            android:width="70dp"
-            android:height="70dp"
+            android:width="60dp"
+            android:height="60dp"
             android:viewportWidth="24"
             android:viewportHeight="24">
             <path

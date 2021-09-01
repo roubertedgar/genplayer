@@ -34,7 +34,7 @@ class MediaControl @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         setupListeners()
-        if (isOnFullScreen()) switchToFullScreen() else switchToPortrait()
+        if (isInPortrait) switchToPortrait() else switchToFullScreen()
     }
 
     private val onClickListener: (View) -> Unit = { view ->
@@ -43,7 +43,7 @@ class MediaControl @JvmOverloads constructor(
             buttons.rewind -> onCommand(Command.Rewind)
         }
 
-        showControls()
+        setControlVisibility(isVisible = true)
     }
 
     private fun setupListeners() {
@@ -55,7 +55,7 @@ class MediaControl @JvmOverloads constructor(
         buttons.playback.setOnSwitchListener { playbackSwitched(it) }
         control.orientation.setOnSwitchListener { orientationSwitched(it) }
 
-        control.root.setOnClickListener { onRootLayoutClick() }
+        control.root.setOnClickListener { setControlVisibility(isVisible = !isControlVisible) }
         control.timeBar.onScrub { progress -> onCommand(Command.Seek(progress)) }
     }
 
@@ -72,9 +72,7 @@ class MediaControl @JvmOverloads constructor(
     }
 
     fun isLoading(isLoading: Boolean = false) {
-        buttons.bufferingSpinProgress.isVisible = isLoading
-        buttons.root.isVisible = isLoading
-        buttons.playback.isVisible = !isLoading
+        //buttons.playback.state  = isLoading
     }
 
     fun updateProgress(currentPosition: Long, bufferedPosition: Long, duration: Long) {
@@ -83,32 +81,23 @@ class MediaControl @JvmOverloads constructor(
         control.timeBar.setDuration(duration)
     }
 
-    private fun onRootLayoutClick() {
-        if (buttons.root.isVisible) hideControls() else showControls()
-    }
+    private fun setControlVisibility(isVisible: Boolean) {
+        val isTimeBarVisible = if (isInPortrait) true else isVisible
+        val frameVisibility = if (isVisible) VISIBLE else INVISIBLE
+        if (isVisible) hideAfterTimeout() else hideTimer.cancel()
 
-    private fun showControls() {
-        control.frame.visibility = VISIBLE
-        buttons.root.isVisible = true
-        control.orientation.isVisible = true
-        control.timeBar.isVisible = true
-        control.timeBar.showScrubber(SCRUBBER_ANIM_DURATION)
-        hideAfterTimeout()
-    }
-
-    private fun hideControls() {
-        control.frame.visibility = INVISIBLE
-        buttons.root.isVisible = false
-        control.orientation.isVisible = false
-        control.timeBar.hideScrubber(SCRUBBER_ANIM_DURATION)
-        if (isOnFullScreen()) control.timeBar.isVisible = false
-
-        hideTimer.cancel()
+        control.frame.visibility = frameVisibility
+        buttons.playback.isVisible = isVisible
+        buttons.fastForward.isVisible = isVisible
+        buttons.rewind.isVisible = isVisible
+        control.orientation.isVisible = isVisible
+        control.timeBar.isVisible = isTimeBarVisible
+        control.timeBar.isScrubVisible = isVisible
     }
 
     private fun hideAfterTimeout() {
         if (isAttachedToWindow) {
-            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS) { hideControls() }
+            hideTimer.schedule(DEFAULT_HIDE_DELAY_MS) { setControlVisibility(false) }
         }
     }
 
@@ -140,11 +129,11 @@ class MediaControl @JvmOverloads constructor(
         }
     }
 
-    private fun isOnFullScreen() = control.orientation.state == SwitchButton.State.FINAL
+    private val isInPortrait get() = control.orientation.state == SwitchButton.State.PRIMARY
+    private val isControlVisible get() = control.frame.isVisible
 
     companion object {
         private const val DEFAULT_HIDE_DELAY_MS = 5000L
-        private const val SCRUBBER_ANIM_DURATION = 300L
     }
 }
 
@@ -167,6 +156,10 @@ class ScrubListener(
         }
     }
 }
+
+var DefaultTimeBar.isScrubVisible: Boolean
+    get() = isVisible
+    set(value) = if (value) showScrubber(300L) else hideScrubber(300L)
 
 fun DefaultTimeBar.onScrub(
     start: (position: Long) -> Unit = {},

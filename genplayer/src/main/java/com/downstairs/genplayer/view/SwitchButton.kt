@@ -15,10 +15,7 @@ class SwitchButton @JvmOverloads constructor(
 
     enum class State {
         PRIMARY,
-        FINAL;
-
-        val isPrimary: Boolean
-            get() = this == PRIMARY
+        FINAL
     }
 
     private val attributes = context.obtainStyledAttributes(attrs, R.styleable.SwitchButton)
@@ -37,8 +34,6 @@ class SwitchButton @JvmOverloads constructor(
         }
 
     init {
-        isClickable = true
-        isFocusable = true
         chooseAnimatedDrawable()
     }
 
