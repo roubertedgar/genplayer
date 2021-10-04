@@ -9,6 +9,7 @@ import com.downstairs.genplayer.R
 import com.downstairs.genplayer.databinding.MediaButtonsViewBinding
 import com.downstairs.genplayer.databinding.MediaControlViewBinding
 import com.downstairs.genplayer.tools.orientation.Orientation
+import com.downstairs.genplayer.view.components.PlaybackState
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.TimeBar
 
@@ -19,7 +20,6 @@ class MediaControl @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var control: MediaControlViewBinding
-    private var buttons: MediaButtonsViewBinding
 
     private var hideTimer = ViewTimer()
     private var onCommand: (Command) -> Unit = {}
@@ -28,7 +28,6 @@ class MediaControl @JvmOverloads constructor(
         inflate(context, R.layout.media_control_view, this)
 
         control = MediaControlViewBinding.bind(rootView)
-        buttons = control.mediaButtons
     }
 
     override fun onAttachedToWindow() {
@@ -39,20 +38,20 @@ class MediaControl @JvmOverloads constructor(
 
     private val onClickListener: (View) -> Unit = { view ->
         when (view) {
-            buttons.fastForward -> onCommand(Command.Forward)
-            buttons.rewind -> onCommand(Command.Rewind)
+            control.fastForward -> onCommand(Command.Forward)
+            control.rewind -> onCommand(Command.Rewind)
         }
 
         setControlVisibility(isVisible = true)
     }
 
     private fun setupListeners() {
-        buttons.playback.setOnClickListener(onClickListener)
-        buttons.fastForward.setOnClickListener(onClickListener)
-        buttons.rewind.setOnClickListener(onClickListener)
+        control.playback.setOnClickListener(onClickListener)
+        control.fastForward.setOnClickListener(onClickListener)
+        control.rewind.setOnClickListener(onClickListener)
         control.orientation.setOnClickListener(onClickListener)
 
-        buttons.playback.setOnSwitchListener { playbackSwitched(it) }
+        control.playback.setOnStateChangeListener { playbackSwitched(it) }
         control.orientation.setOnSwitchListener { orientationSwitched(it) }
 
         control.root.setOnClickListener { setControlVisibility(isVisible = !isControlVisible) }
@@ -64,11 +63,11 @@ class MediaControl @JvmOverloads constructor(
     }
 
     fun play() {
-        buttons.playback.state = SwitchButton.State.FINAL
+        // buttons.playback.state = SwitchButton.State.FINAL
     }
 
     fun pause() {
-        buttons.playback.state = SwitchButton.State.PRIMARY
+        // buttons.playback.state = SwitchButton.State.PRIMARY
     }
 
     fun isLoading(isLoading: Boolean = false) {
@@ -87,9 +86,9 @@ class MediaControl @JvmOverloads constructor(
         if (isVisible) hideAfterTimeout() else hideTimer.cancel()
 
         control.frame.visibility = frameVisibility
-        buttons.playback.isVisible = isVisible
-        buttons.fastForward.isVisible = isVisible
-        buttons.rewind.isVisible = isVisible
+        control.playback.isVisible = isVisible
+        control.fastForward.isVisible = isVisible
+        control.rewind.isVisible = isVisible
         control.orientation.isVisible = isVisible
         control.timeBar.isVisible = isTimeBarVisible
         control.timeBar.isScrubVisible = isVisible
@@ -113,12 +112,8 @@ class MediaControl @JvmOverloads constructor(
         control.timeBarPlaceHolder.isVisible = true
     }
 
-    private fun playbackSwitched(state: SwitchButton.State) {
-        if (state == SwitchButton.State.FINAL) {
-            onCommand(Command.Playback(isPlaying = true))
-        } else {
-            onCommand(Command.Playback(isPlaying = false))
-        }
+    private fun playbackSwitched(state: PlaybackState) {
+        onCommand(Command.Playback(isPlaying = state.isPlaying))
     }
 
     private fun orientationSwitched(state: SwitchButton.State) {

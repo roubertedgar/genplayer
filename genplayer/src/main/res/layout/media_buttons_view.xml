@@ -7,52 +7,6 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-    <ProgressBar
-        android:id="@+id/bufferingSpinProgress"
-        android:layout_width="62dp"
-        android:layout_height="62dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
-        app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.downstairs.genplayer.view.SwitchButton
-        android:id="@+id/playback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:drawable_final="@drawable/ic_play_pause_end_avd"
-        app:drawable_initial="@drawable/ic_play_pause_start_avd"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
-        app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/fastForward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_forward"
-        app:layout_constraintBottom_toBottomOf="@+id/playback"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/centerVerticalGuide"
-        app:layout_constraintTop_toTopOf="@+id/playback" />
-
-    <ImageButton
-        android:id="@+id/rewind"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_backward"
-        app:layout_constraintBottom_toBottomOf="@+id/playback"
-        app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/playback" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/centerVerticalGuide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.50121653" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

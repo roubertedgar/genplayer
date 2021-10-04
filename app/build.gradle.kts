@@ -3,12 +3,12 @@ plugins {
     id(Plugins.Kotlin.android)
     id(Plugins.Kotlin.androidExtensions)
     id(Plugins.Kotlin.kapt)
-    jacoco
+//    jacoco
 }
 
-jacoco{
-    toolVersion = "0.8.4"
-}
+//jacoco{
+//    toolVersion = "0.8.4"
+//}
 
 android {
     defaultConfig {
