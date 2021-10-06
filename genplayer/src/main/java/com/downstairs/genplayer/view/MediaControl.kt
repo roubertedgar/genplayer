@@ -62,17 +62,7 @@ class MediaControl @JvmOverloads constructor(
         this.onCommand = onCommand
     }
 
-    fun play() {
-        // buttons.playback.state = SwitchButton.State.FINAL
-    }
-
-    fun pause() {
-        // buttons.playback.state = SwitchButton.State.PRIMARY
-    }
-
-    fun isLoading(isLoading: Boolean = false) {
-        //buttons.playback.state  = isLoading
-    }
+    fun setPlaybackState(state: PlaybackState) { control.playback.state = state }
 
     fun updateProgress(currentPosition: Long, bufferedPosition: Long, duration: Long) {
         control.timeBar.setPosition(currentPosition)
@@ -113,7 +103,11 @@ class MediaControl @JvmOverloads constructor(
     }
 
     private fun playbackSwitched(state: PlaybackState) {
-        onCommand(Command.Playback(isPlaying = state.isPlaying))
+        if (state == PlaybackState.Playing) {
+            onCommand(Command.Playback(isPlaying = true))
+        } else if (state == PlaybackState.Paused) {
+            onCommand(Command.Playback(isPlaying = false))
+        }
     }
 
     private fun orientationSwitched(state: SwitchButton.State) {

@@ -5,6 +5,9 @@ import android.content.Context
 import android.view.View
 import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
+import androidx.core.animation.addListener
+import androidx.core.animation.doOnCancel
+import androidx.core.animation.doOnPause
 
 fun measureDimension(desiredSize: Int, measureSpec: Int): Int {
 
@@ -47,8 +50,8 @@ fun View.dpToPixel(dp: Float): Float {
 fun animateIntValue(
     config: AnimationConfig,
     onUpdate: (value: Int, fraction: Float) -> Unit
-) {
-    ValueAnimator.ofInt(0, config.value).apply {
+): ValueAnimator {
+    return ValueAnimator.ofInt(0, config.value).apply {
         duration = config.duration
         repeatCount = config.repeat
         interpolator = config.interpolator
@@ -58,7 +61,8 @@ fun animateIntValue(
                 valueAnimator.animatedFraction
             )
         }
-    }.start()
+        doOnPause { }
+    }
 }
 
 data class AnimationConfig(

@@ -20,6 +20,7 @@
     <com.downstairs.genplayer.view.components.PlaybackButton
         android:id="@+id/playback"
         android:layout_width="62dp"
+        android:background="@drawable/rounded_player_button_background"
         android:layout_height="62dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/centerVerticalGuide"

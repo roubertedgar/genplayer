@@ -8,8 +8,11 @@ import com.downstairs.genplayer.R
 import com.downstairs.genplayer.databinding.PlayerControllerViewBinding
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PAUSE
 import com.downstairs.genplayer.notification.PLAYER_CONTROL_ACTION_PLAY
+import com.downstairs.genplayer.view.components.PlaybackState
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.STATE_BUFFERING
+import com.google.android.exoplayer2.Player.STATE_READY
+import kotlinx.android.synthetic.main.player_controller_view.view.*
 
 class PlayerControllerView @JvmOverloads constructor(
     context: Context,
@@ -54,29 +57,21 @@ class PlayerControllerView @JvmOverloads constructor(
         this.player = player
         this.player?.addListener(object : Player.EventListener {
 
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                if (isPlaying) {
-                    binding.mediaControl.play()
-                }
-            }
-
-            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-                if (!playWhenReady) {
-                    binding.mediaControl.pause()
-                }
-            }
-
             override fun onPlaybackStateChanged(state: Int) {
-                if (state == STATE_BUFFERING) {
-                    binding.mediaControl.isLoading(true)
-                } else {
-                    binding.mediaControl.isLoading(false)
+                val playbackState = when (state) {
+                    STATE_READY -> playbackState(player)
+                    STATE_BUFFERING -> PlaybackState.Buffering
+                    else -> PlaybackState.Paused
                 }
 
+                mediaControl.setPlaybackState(playbackState)
                 progressTimer.repeat(MAX_PROGRESS_UPDATE_MS) { updateProgress() }
             }
         })
     }
+
+    private fun playbackState(player: Player) =
+        if (player.playWhenReady) PlaybackState.Playing else PlaybackState.Paused
 
     private fun safeSeek(offsetPosition: Long) {
         player?.also {

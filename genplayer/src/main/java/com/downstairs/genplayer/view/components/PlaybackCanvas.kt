@@ -11,23 +11,6 @@ import kotlin.math.sqrt
 class Playing(context: Context, box: RectF) : Playback(context, box) {
     override val path = Path().apply {
         val left = rect.left + (rect.right * 0.15f)
-
-        moveTo(left, rect.top)
-        lineTo(left, rect.bottom)
-        lineTo(rect.right, rect.centerY())
-        lineTo(left, rect.top)
-        close()
-    }
-
-    override val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        color = ContextCompat.getColor(context, R.color.color_primary)
-    }
-}
-
-class Paused(context: Context, box: RectF) : Playback(context, box) {
-    override val path = Path().apply {
-        val left = rect.left + (rect.right * 0.15f)
         val right = rect.right - (rect.right * 0.15f)
 
         moveTo(left, rect.top)
@@ -40,6 +23,23 @@ class Paused(context: Context, box: RectF) : Playback(context, box) {
         style = Paint.Style.STROKE
         color = ContextCompat.getColor(context, R.color.color_primary)
         strokeWidth = context.dpToPixel(6f)
+    }
+}
+
+class Paused(context: Context, box: RectF) : Playback(context, box) {
+    override val path = Path().apply {
+        val left = rect.left + (rect.right * 0.15f)
+
+        moveTo(left, rect.top)
+        lineTo(left, rect.bottom)
+        lineTo(rect.right, rect.centerY())
+        lineTo(left, rect.top)
+        close()
+    }
+
+    override val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = ContextCompat.getColor(context, R.color.color_primary)
     }
 }
 

@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import androidx.core.animation.doOnCancel
 import androidx.core.content.ContextCompat
 import com.downstairs.genplayer.R
 
@@ -31,7 +32,25 @@ class PlaybackButton @JvmOverloads constructor(
     private var centerX = 0.0f
     private var centerY = 0.0f
 
-    var state: PlaybackState = PlaybackState.PLAYING
+    private val infinitelyAnimation = animateIntValue(
+        AnimationConfig(200, 1200, INFINITE, AccelerateInterpolator())
+    ) { _, fraction ->
+        if (fraction < 0.5) sweepAngle = 360 * fraction
+        else if (fraction >= 0.5) sweepAngle = 360 - (360 * fraction)
+
+        if (fraction >= 0.25) {
+            startAngle = (480 * fraction) - 120
+        }
+        postInvalidate()
+    }.apply {
+        doOnCancel {
+            startAngle = 0.0f
+            sweepAngle = 0.0f
+            postInvalidate()
+        }
+    }
+
+    var state: PlaybackState = PlaybackState.Playing
         set(value) {
             if (field == value) return
             field = value
@@ -42,9 +61,6 @@ class PlaybackButton @JvmOverloads constructor(
 
     init {
         if (isInEditMode) sweepAngle = 270f
-
-        isClickable = true
-        isFocusable = true
     }
 
     fun setOnStateChangeListener(onChange: (PlaybackState) -> Unit) {
@@ -52,9 +68,13 @@ class PlaybackButton @JvmOverloads constructor(
     }
 
     override fun performClick(): Boolean {
-        state = if (state == PlaybackState.PLAYING) PlaybackState.PAUSED else PlaybackState.PLAYING
-        return super.performClick()
+        state = if (state == PlaybackState.Playing) {
+            PlaybackState.Paused
+        } else {
+            PlaybackState.Playing
+        }
 
+        return super.performClick()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -74,16 +94,18 @@ class PlaybackButton @JvmOverloads constructor(
     }
 
     private fun updateState() {
-        when (state) {
-            PlaybackState.PLAYING -> playback = Playing(context, progressBox)
-            PlaybackState.PAUSED -> playback = Paused(context, progressBox)
-            PlaybackState.BUFFERING -> {
-                animateInfinitely()
-                playback = Empty(context, progressBox)
-            }
+        playback = when (state) {
+            PlaybackState.Playing -> Playing(context, progressBox)
+            PlaybackState.Paused -> Paused(context, progressBox)
+            PlaybackState.Buffering -> Empty(context, progressBox)
         }
 
+        isClickable = state.isClickable
+        isFocusable = state.isClickable
+
+        if (state is PlaybackState.Buffering) animation.start() else animation.cancel()
         if (!progressBox.isEmpty) postInvalidate()
+
         onStateChanged(state)
     }
 
@@ -103,20 +125,6 @@ class PlaybackButton @JvmOverloads constructor(
 
         animateIntValue(config) { animated, _ ->
             sweepAngle = animated.toFloat()
-            postInvalidate()
-        }
-    }
-
-    private fun animateInfinitely() {
-        val config = AnimationConfig(200, 1200, INFINITE, AccelerateInterpolator())
-
-        animateIntValue(config) { _, fraction ->
-            if (fraction < 0.5) sweepAngle = 360 * fraction
-            else if (fraction >= 0.5) sweepAngle = 360 - (360 * fraction)
-
-            if (fraction >= 0.25) {
-                startAngle = (480 * fraction) - 120
-            }
             postInvalidate()
         }
     }

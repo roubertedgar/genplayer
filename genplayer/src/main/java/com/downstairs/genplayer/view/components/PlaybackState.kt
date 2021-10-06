@@ -1,7 +1,7 @@
 package com.downstairs.genplayer.view.components
 
-enum class PlaybackState(val isPlaying: Boolean) {
-    PLAYING(true),
-    PAUSED(false),
-    BUFFERING(false)
+sealed class PlaybackState(val isClickable: Boolean) {
+    object Playing : PlaybackState(true)
+    object Paused : PlaybackState(true)
+    object Buffering : PlaybackState(false)
 }
