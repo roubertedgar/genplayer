@@ -25,14 +25,12 @@ class PlaybackButton @JvmOverloads constructor(
     private var progressBox = RectF(0f, 0f, 0f, 0f)
     private var progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = colorAccent }
 
-    private var playback: Playback = Playing(context, progressBox)
-
     private var startAngle = 0.0f
     private var sweepAngle = 0.0f
     private var centerX = 0.0f
     private var centerY = 0.0f
 
-    private val infinitelyAnimation = animateIntValue(
+    private val bufferingAnimation = animateIntValue(
         AnimationConfig(200, 1200, INFINITE, AccelerateInterpolator())
     ) { _, fraction ->
         if (fraction < 0.5) sweepAngle = 360 * fraction
@@ -50,7 +48,9 @@ class PlaybackButton @JvmOverloads constructor(
         }
     }
 
-    var state: PlaybackState = PlaybackState.Playing
+    private var playback: Playback = Paused(context, progressBox)
+
+    var state: PlaybackState = PlaybackState.Paused
         set(value) {
             if (field == value) return
             field = value
@@ -103,7 +103,7 @@ class PlaybackButton @JvmOverloads constructor(
         isClickable = state.isClickable
         isFocusable = state.isClickable
 
-        if (state is PlaybackState.Buffering) animation.start() else animation.cancel()
+        if (state is PlaybackState.Buffering) bufferingAnimation.start() else bufferingAnimation.cancel()
         if (!progressBox.isEmpty) postInvalidate()
 
         onStateChanged(state)
