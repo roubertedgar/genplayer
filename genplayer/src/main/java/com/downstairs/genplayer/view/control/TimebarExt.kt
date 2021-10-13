@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.view.components.dpToPixel
+import com.downstairs.genplayer.view.control.ScrubListener
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 
 fun View.moveY(dp: Float) {
@@ -17,6 +18,18 @@ fun View.horizontalPadding(dp: Float) {
         context.dpToPixel(dp).toInt(), 0,
         context.dpToPixel(dp).toInt(), 0
     )
+}
+
+var DefaultTimeBar.isScrubVisible: Boolean
+    get() = isVisible
+    set(value) = if (value) showScrubber(300L) else hideScrubber(300L)
+
+fun DefaultTimeBar.onScrub(
+    start: (position: Long) -> Unit = {},
+    move: (position: Long) -> Unit = {},
+    stop: (position: Long) -> Unit = {}
+) {
+    this.addListener(ScrubListener(start, move, stop))
 }
 
 val DefaultTimeBar.barTopHeight: Float

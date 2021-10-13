@@ -3,32 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.downstairs.genplayer.view.MediaControl
+    <com.downstairs.genplayer.view.control.MediaControl
         android:id="@+id/mediaControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/linearLayout"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_margin="@dimen/small"-->
-    <!--        android:gravity="end"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:theme="@style/Player.Theme.Menu"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent">-->
-
-    <!--        <androidx.mediarouter.app.MediaRouteButton-->
-    <!--            android:id="@+id/castButton"-->
-    <!--            android:layout_width="@dimen/menu_item_size"-->
-    <!--            android:layout_height="@dimen/menu_item_size"-->
-    <!--            android:layout_marginEnd="@dimen/small" />-->
-
-    <!--        <ImageButton-->
-    <!--            android:layout_width="@dimen/menu_item_size"-->
-    <!--            android:layout_height="@dimen/menu_item_size"-->
-    <!--            android:src="@drawable/ic_more_menu" />-->
-    <!--    </LinearLayout>-->
 </FrameLayout>

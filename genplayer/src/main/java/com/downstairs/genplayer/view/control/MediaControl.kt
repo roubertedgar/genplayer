@@ -1,4 +1,4 @@
-package com.downstairs.genplayer.view
+package com.downstairs.genplayer.view.control
 
 import android.content.Context
 import android.util.AttributeSet
@@ -8,9 +8,14 @@ import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.databinding.MediaControlViewBinding
 import com.downstairs.genplayer.tools.orientation.Orientation
+import com.downstairs.genplayer.view.Command
+import com.downstairs.genplayer.view.SwitchButton
+import com.downstairs.genplayer.view.ViewTimer
 import com.downstairs.genplayer.view.components.PlaybackState
-import com.google.android.exoplayer2.ui.DefaultTimeBar
-import com.google.android.exoplayer2.ui.TimeBar
+import com.downstairs.genplayer.view.horizontalPadding
+import com.downstairs.genplayer.view.isScrubVisible
+import com.downstairs.genplayer.view.moveY
+import com.downstairs.genplayer.view.onScrub
 
 class MediaControl @JvmOverloads constructor(
     context: Context,
@@ -25,7 +30,6 @@ class MediaControl @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.media_control_view, this)
-
         control = MediaControlViewBinding.bind(rootView)
     }
 
@@ -125,44 +129,4 @@ class MediaControl @JvmOverloads constructor(
     companion object {
         private const val DEFAULT_HIDE_DELAY_MS = 5000L
     }
-}
-
-class ScrubListener(
-    val onStart: (Long) -> Unit = {},
-    val onMove: (Long) -> Unit = {},
-    val onStop: (Long) -> Unit = {}
-) : TimeBar.OnScrubListener {
-    override fun onScrubStart(timeBar: TimeBar, position: Long) {
-        onStart(position)
-    }
-
-    override fun onScrubMove(timeBar: TimeBar, position: Long) {
-        onMove(position)
-    }
-
-    override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
-        if (!canceled) {
-            onStop(position)
-        }
-    }
-}
-
-var DefaultTimeBar.isScrubVisible: Boolean
-    get() = isVisible
-    set(value) = if (value) showScrubber(300L) else hideScrubber(300L)
-
-fun DefaultTimeBar.onScrub(
-    start: (position: Long) -> Unit = {},
-    move: (position: Long) -> Unit = {},
-    stop: (position: Long) -> Unit = {}
-) {
-    this.addListener(ScrubListener(start, move, stop))
-}
-
-sealed class Command {
-    object Rewind : Command()
-    object Forward : Command()
-    data class Seek(val position: Long) : Command()
-    data class Playback(val isPlaying: Boolean) : Command()
-    data class Rotate(val orientation: Orientation) : Command()
 }
