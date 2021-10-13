@@ -5,6 +5,7 @@ import androidx.annotation.Px
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
+import com.downstairs.genplayer.view.components.dpToPixel
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 
 fun View.moveY(dp: Float) {

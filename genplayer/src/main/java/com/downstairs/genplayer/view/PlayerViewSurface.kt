@@ -2,7 +2,6 @@ package com.downstairs.genplayer.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -86,12 +85,4 @@ class PlayerViewSurface @JvmOverloads constructor(
     private fun onDestroy() {
         PlayerServiceConnection.disconnect(context)
     }
-}
-
-fun Context.dpToPixel(dp: Float): Float {
-    return dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-}
-
-fun Context.pixelToDp(px: Float): Float {
-    return px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }
