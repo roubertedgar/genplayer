@@ -11,11 +11,11 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.downstairs.genplayer.GenPlayer
 import com.downstairs.genplayer.R
 import com.downstairs.genplayer.content.Content
+import com.downstairs.genplayer.databinding.PlayerViewSurfaceBinding
 import com.downstairs.genplayer.engine.EngineObserver
 import com.downstairs.genplayer.engine.PlayerEngine
 import com.downstairs.genplayer.service.PlayerServiceConnection
 import com.downstairs.genplayer.tools.orientation.Orientation
-import kotlinx.android.synthetic.main.player_view_surface.view.*
 
 class PlayerViewSurface @JvmOverloads constructor(
     context: Context,
@@ -24,9 +24,11 @@ class PlayerViewSurface @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr), LifecycleObserver {
 
     private val fullScreenDialog: FullScreenDialog = FullScreenDialog(context)
+    private val binding: PlayerViewSurfaceBinding
 
     init {
         inflate(context, R.layout.player_view_surface, this)
+        binding = PlayerViewSurfaceBinding.bind(rootView)
     }
 
     override fun onAttachedToWindow() {
@@ -46,7 +48,7 @@ class PlayerViewSurface @JvmOverloads constructor(
     }
 
     private fun setupListeners() {
-        playerViewController.setListener(object : ControllerListener {
+        binding.playerViewController.setListener(object : ControllerListener {
             override fun onOrientationChanged(orientation: Orientation) {
                 this@PlayerViewSurface.onOrientationChanged(orientation)
             }
@@ -55,27 +57,27 @@ class PlayerViewSurface @JvmOverloads constructor(
 
     private fun onOrientationChanged(orientation: Orientation) {
         if (orientation == Orientation.LANDSCAPE && !fullScreenDialog.isShowing) {
-            fullScreenDialog.show(playerViewContainer)
+            fullScreenDialog.show(binding.playerViewContainer)
         } else if (fullScreenDialog.isShowing) {
             fullScreenDialog.dismiss()
-            addView(playerViewContainer)
+            addView(binding.playerViewContainer)
         }
     }
 
     fun enterOnPictureInPictureMode() {
-        playerViewController.toPortraitMode()
-        playerViewController.disable()
+        binding.playerViewController.toPortraitMode()
+        binding.playerViewController.disable()
     }
 
     fun exitFromPictureInPictureMode() {
-        playerViewController.enable()
+        binding.playerViewController.enable()
     }
 
     private fun bindView(genPlayer: GenPlayer) {
         genPlayer.addEngineListener(object : EngineObserver() {
             override fun onEngineChanged(engine: PlayerEngine) {
-                playerViewController.setPlayer(engine.player)
-                surfaceView.setPlayer(engine)
+                binding.playerViewController.setPlayer(engine.player)
+                binding.surfaceView.setPlayer(engine)
             }
         })
     }

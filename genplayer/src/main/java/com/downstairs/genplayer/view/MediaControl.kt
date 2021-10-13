@@ -6,7 +6,6 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.downstairs.genplayer.R
-import com.downstairs.genplayer.databinding.MediaButtonsViewBinding
 import com.downstairs.genplayer.databinding.MediaControlViewBinding
 import com.downstairs.genplayer.tools.orientation.Orientation
 import com.downstairs.genplayer.view.components.PlaybackState
@@ -62,7 +61,9 @@ class MediaControl @JvmOverloads constructor(
         this.onCommand = onCommand
     }
 
-    fun setPlaybackState(state: PlaybackState) { control.playback.state = state }
+    fun setPlaybackState(state: PlaybackState) {
+        control.playback.state = state
+    }
 
     fun updateProgress(currentPosition: Long, bufferedPosition: Long, duration: Long) {
         control.timeBar.setPosition(currentPosition)
